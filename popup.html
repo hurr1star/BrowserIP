@@ -1,0 +1,40 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My IP Address</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="card">
+    <p class="eyebrow">NETWORK INTEL</p>
+    <h1>Public IP Trace</h1>
+    <div id="vpnWarning" class="vpn-warning" hidden>
+      WARNING: VPN NOT DETECTED
+    </div>
+    <p id="ip" class="ip">Loading...</p>
+    <dl class="details">
+      <div class="row">
+        <dt>VPN</dt>
+        <dd id="vpnStatus">Checking...</dd>
+      </div>
+      <div class="row">
+        <dt>LOCATION</dt>
+        <dd id="location">Loading...</dd>
+      </div>
+      <div class="row">
+        <dt>COUNTRY</dt>
+        <dd id="country">Loading...</dd>
+      </div>
+      <div class="row">
+        <dt>PROVIDER</dt>
+        <dd id="provider">Loading...</dd>
+      </div>
+    </dl>
+    <p id="status" class="status" aria-live="polite"></p>
+    <button id="refresh" type="button">Refresh</button>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>
