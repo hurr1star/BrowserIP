@@ -1,10 +1,13 @@
-﻿{
+{
   "manifest_version": 3,
-  "name": "My IP Address Viewer",
-  "version": "1.0.0",
-  "description": "Shows your current public IP address.",
+  "name": "BrowserIP",
+  "version": "1.1.0",
+  "description": "Shows your browser's public IP, location and provider, and warns when your VPN is off or leaking.",
+  "minimum_chrome_version": "121",
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "scripts": ["background.js"],
+    "type": "module"
   },
   "action": {
     "default_icon": {
@@ -14,7 +17,11 @@
       "128": "icons/icon-gray-128.png"
     },
     "default_popup": "popup.html",
-    "default_title": "Show My IP"
+    "default_title": "BrowserIP"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
   },
   "icons": {
     "16": "icons/icon-gray-16.png",
@@ -22,8 +29,18 @@
     "48": "icons/icon-gray-48.png",
     "128": "icons/icon-gray-128.png"
   },
-  "permissions": [],
+  "permissions": ["alarms", "notifications", "storage"],
   "host_permissions": [
-    "https://api.ipapi.is/*"
-  ]
+    "https://api.ipapi.is/*",
+    "https://ipwho.is/*",
+    "https://ipinfo.io/*",
+    "https://api4.ipify.org/*",
+    "https://api6.ipify.org/*"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "browserip@hurr1star.github.io",
+      "strict_min_version": "121.0"
+    }
+  }
 }

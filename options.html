@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrowserIP settings</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main class="panel">
+    <p class="eyebrow">BROWSERIP</p>
+    <h1>Settings</h1>
+    <form id="settings">
+      <label class="option">
+        <input type="checkbox" name="expectVpn">
+        <span>
+          I expect to be on a VPN
+          <small>Show the red icon and warning when no VPN is detected. When off, a direct connection shows a blue icon.</small>
+        </span>
+      </label>
+      <label class="option">
+        <span>
+          Background checks
+          <small>Background checks only ask ipify whether your IP changed. A full lookup (ipapi.is allows about 1,000 a day without a key) runs when it changes, every 6 hours, or when you press Refresh.</small>
+        </span>
+        <select name="pollMinutes">
+          <option value="0">Off</option>
+          <option value="2">Every 2 minutes</option>
+          <option value="5">Every 5 minutes</option>
+          <option value="10">Every 10 minutes</option>
+          <option value="15">Every 15 minutes</option>
+          <option value="30">Every 30 minutes</option>
+          <option value="60">Every hour</option>
+        </select>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="notifyOnChange">
+        <span>
+          Notify me when my VPN status or IP changes
+          <small>Only for background checks; the popup already shows the change.</small>
+        </span>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="showCountryBadge">
+        <span>
+          Show the country code on the toolbar icon
+          <small>Alerts (OFF, LEAK, ?) are always shown.</small>
+        </span>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="checkIpv6">
+        <span>
+          Check IPv6 separately
+          <small>Catches VPNs that tunnel IPv4 but leak IPv6. Costs one extra lookup when you have IPv6.</small>
+        </span>
+      </label>
+    </form>
+    <p id="saved" class="saved" aria-live="polite"></p>
+  </main>
+  <script type="module" src="options.js"></script>
+</body>
+</html>
