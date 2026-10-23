@@ -60,3 +60,13 @@ test("summarize: one family tunnelled and the other direct is a leak", () => {
 test("summarize ignores addresses whose lookup failed", () => {
   assert.equal(summarize([address(vpn), address(null, "IPv6")]).overall, "tunnelled");
 });
+
+test("a second opinion can flag what the first database missed", () => {
+  const info = { ...residential, secondOpinion: { provider: "proxycheck.io", tunnelled: true, label: "VPN (Mullvad)" } };
+  assert.deepEqual(classifyAddress(info), { tunnelled: true, reasons: ["VPN (Mullvad) (proxycheck.io)"] });
+});
+
+test("a second opinion fills in when the first database has no flags", () => {
+  const info = { ...noFlags, secondOpinion: { provider: "proxycheck.io", tunnelled: false, label: null } };
+  assert.equal(classifyAddress(info).tunnelled, false);
+});

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { describeChange, deriveIndicator, isStale, staleAfterMs } from "../lib/indicator.js";
+import { describeChange, deriveIndicator, expectationMismatch, isStale, staleAfterMs } from "../lib/indicator.js";
 import { DEFAULT_SETTINGS } from "../lib/settings.js";
 
 const settings = { ...DEFAULT_SETTINGS };
@@ -31,7 +31,8 @@ test("tunnelled: green with the country badge", () => {
   assert.equal(indicator.vpnLabel, "Detected");
   assert.equal(indicator.detail, "VPN (Mullvad VPN)");
   assert.equal(indicator.warning, null);
-  assert.match(indicator.title, /VPN detected \(VPN \(Mullvad VPN\)\)/);
+  assert.equal(indicator.safe, true);
+  assert.match(indicator.title, /^BrowserIP · VPN: Detected \(VPN \(Mullvad VPN\)\)\n192\.0\.2\.1 · SE\nChecked /);
   assert.equal(deriveIndicator(state("tunnelled"), { ...settings, showCountryBadge: false }, NOW).badgeText, "");
 });
 
@@ -40,6 +41,7 @@ test("direct while a VPN is expected: red, OFF badge and warning", () => {
   assert.equal(indicator.color, "red");
   assert.equal(indicator.badgeText, "OFF");
   assert.match(indicator.warning, /VPN not detected/);
+  assert.equal(indicator.safe, false);
 });
 
 test("direct while no VPN is expected: blue, no warning", () => {
@@ -69,6 +71,7 @@ test("old or failed results are greyed out but keep their label", () => {
   assert.equal(old.color, "gray");
   assert.equal(old.badgeText, "?");
   assert.equal(old.vpnLabel, "Detected");
+  assert.equal(old.safe, false);
   assert.match(old.title, /Out of date/);
 
   const failed = deriveIndicator(state("tunnelled", { ok: false, error: "offline" }), settings, NOW);
@@ -91,21 +94,57 @@ test("staleness follows the polling interval", () => {
 });
 
 test("describeChange reports VPN transitions and IP changes", () => {
-  assert.deepEqual(describeChange(state("tunnelled"), state("direct")), {
+  assert.deepEqual(describeChange(state("tunnelled"), state("direct"), settings), {
     title: "VPN disconnected",
     message: "192.0.2.1 · M247 · Sweden"
   });
-  assert.equal(describeChange(state("direct"), state("tunnelled")).title, "VPN connected");
-  assert.equal(describeChange(state("tunnelled"), state("leak")).title, "VPN leak detected");
+  assert.equal(describeChange(state("direct"), state("tunnelled"), settings).title, "VPN connected");
+  assert.equal(describeChange(state("tunnelled"), state("leak"), settings).title, "VPN leak detected");
 
   const moved = state("tunnelled");
   moved.addresses[0] = { ...moved.addresses[0], ip: "192.0.2.99" };
-  assert.equal(describeChange(state("tunnelled"), moved).title, "IP address changed");
+  assert.equal(describeChange(state("tunnelled"), moved, settings).title, "IP address changed");
 });
 
 test("describeChange stays quiet when nothing meaningful changed", () => {
-  assert.equal(describeChange(state("tunnelled"), state("tunnelled")), null);
-  assert.equal(describeChange(null, state("tunnelled")), null);
-  assert.equal(describeChange(state("tunnelled"), state("tunnelled", { ok: false })), null);
-  assert.equal(describeChange(state("unknown"), state("direct")), null);
+  assert.equal(describeChange(state("tunnelled"), state("tunnelled"), settings), null);
+  assert.equal(describeChange(null, state("tunnelled"), settings), null);
+  assert.equal(describeChange(state("tunnelled"), state("tunnelled", { ok: false }), settings), null);
+  assert.equal(describeChange(state("unknown"), state("direct"), settings), null);
+});
+
+test("an exit in the wrong country turns the icon red with a !CC badge", () => {
+  const expectSweden = { ...settings, expectedCountry: "SE" };
+  assert.equal(expectationMismatch(state("tunnelled"), expectSweden), null);
+
+  const expectGermany = { ...settings, expectedCountry: "DE" };
+  const indicator = deriveIndicator(state("tunnelled"), expectGermany, NOW);
+  assert.equal(indicator.color, "red");
+  assert.equal(indicator.badgeText, "!SE");
+  assert.equal(indicator.warning, "Exit country is Sweden, expected Germany");
+  assert.equal(indicator.vpnLabel, "Detected");
+  assert.equal(indicator.safe, false);
+});
+
+test("a provider that doesn't match the expected one is flagged", () => {
+  const matching = deriveIndicator(state("tunnelled"), { ...settings, expectedProvider: "m247" }, NOW);
+  assert.equal(matching.safe, true);
+
+  const other = deriveIndicator(state("tunnelled"), { ...settings, expectedProvider: "Proton" }, NOW);
+  assert.equal(other.badgeText, "!ISP");
+  assert.equal(other.warning, "Provider is M247, expected Proton");
+});
+
+test("expectation alerts never override a more serious alert", () => {
+  const indicator = deriveIndicator(state("direct"), { ...settings, expectedCountry: "DE" }, NOW);
+  assert.equal(indicator.badgeText, "OFF");
+});
+
+test("describeChange reports a new expectation mismatch", () => {
+  const expectSweden = { ...settings, expectedCountry: "SE" };
+  const moved = state("tunnelled");
+  moved.addresses[0] = { ...moved.addresses[0], info: { ...moved.addresses[0].info, countryCode: "US", country: "United States" } };
+  const change = describeChange(state("tunnelled"), moved, expectSweden);
+  assert.equal(change.title, "Unexpected VPN exit");
+  assert.match(change.message, /^Exit country is United States, expected Sweden · 192\.0\.2\.1$/);
 });

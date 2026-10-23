@@ -8,5 +8,5 @@ out="dist/browserip-${version}.zip"
 
 mkdir -p dist
 rm -f "$out"
-zip -qr "$out" manifest.json ./*.html ./*.css ./*.js lib icons -x eslint.config.js
+zip -qr "$out" manifest.json ./*.html ./*.css ./*.js lib icons _locales -x eslint.config.js
 echo "$out"

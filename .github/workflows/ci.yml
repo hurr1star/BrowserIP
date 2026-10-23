@@ -31,12 +31,28 @@ jobs:
           name: browserip-extension
           path: dist/*.zip
 
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
   release:
-    needs: check
+    needs: [check, e2e]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    # Store publishing is opt-in: each step runs only when its secrets exist.
+    env:
+      CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+      AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -45,3 +61,19 @@ jobs:
       - run: gh release create "$GITHUB_REF_NAME" dist/*.zip --repo "$GITHUB_REPOSITORY" --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Publish to the Chrome Web Store
+        if: env.CHROME_EXTENSION_ID != ''
+        run: npx --yes chrome-webstore-upload-cli@3 upload --source dist/*.zip --auto-publish
+        env:
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+      - name: Publish to addons.mozilla.org
+        if: env.AMO_JWT_ISSUER != ''
+        run: |
+          mkdir build && unzip -q dist/*.zip -d build
+          npx --yes web-ext@8 sign --source-dir build --channel listed \
+            --api-key "$AMO_JWT_ISSUER" --api-secret "$AMO_JWT_SECRET"
+        env:
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}

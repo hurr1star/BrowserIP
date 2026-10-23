@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { LOOKUP_TTL_MS, runCheck } from "../lib/check.js";
+import { LOOKUP_TTL_MS, lookupAddress, runCheck } from "../lib/check.js";
 import { DEFAULT_SETTINGS } from "../lib/settings.js";
 import { fakeFetch, fixture } from "./helpers.js";
 
-const settings = { ...DEFAULT_SETTINGS };
+// Most tests leave the second opinion out; it has its own tests below.
+const settings = { ...DEFAULT_SETTINGS, secondOpinion: false };
 const NOW = 1_800_000_000_000;
 
 function residentialFor(ip) {
@@ -122,4 +123,44 @@ test("a failed first check has no data", async () => {
   assert.equal(state.ok, false);
   assert.deepEqual(state.addresses, []);
   assert.equal(state.checkedAt, null);
+});
+
+test("asks proxycheck.io only about addresses ipapi.is did not flag", async () => {
+  const fetchImpl = fakeFetch({
+    "https://api4.ipify.org/": { ip: "185.65.135.10" },
+    "https://api6.ipify.org/": { ip: "2001:db8::7" },
+    "https://api.ipapi.is/?q=185": fixture("ipapi-vpn"),
+    "https://api.ipapi.is/?q=2001": residentialFor("2001:db8::7"),
+    "https://proxycheck.io/": { status: "ok", "2001:db8::7": { proxy: "yes", type: "VPN" } }
+  });
+  const state = await runCheck({ settings: { ...settings, secondOpinion: true }, now: NOW, fetchImpl });
+  assert.equal(state.overall, "tunnelled");
+  assert.deepEqual(state.addresses[1].reasons, ["VPN (proxycheck.io)"]);
+  assert.deepEqual(
+    fetchImpl.calls.filter((url) => url.startsWith("https://proxycheck.io/")),
+    ["https://proxycheck.io/v2/2001:db8::7?vpn=1&asn=1"]
+  );
+});
+
+test("passes API keys to the providers", async () => {
+  const fetchImpl = fakeFetch({
+    "https://api4.ipify.org/": { ip: "198.51.100.7" },
+    "https://api.ipapi.is/": fixture("ipapi-residential"),
+    "https://proxycheck.io/": { status: "ok", "198.51.100.7": { proxy: "no" } }
+  });
+  await runCheck({
+    settings: { ...settings, checkIpv6: false, secondOpinion: true },
+    keys: { ipapi: "A", proxycheck: "B" },
+    now: NOW,
+    fetchImpl
+  });
+  assert.ok(fetchImpl.calls.includes("https://api.ipapi.is/?q=198.51.100.7&key=A"));
+  assert.ok(fetchImpl.calls.includes("https://proxycheck.io/v2/198.51.100.7?vpn=1&asn=1&key=B"));
+});
+
+test("lookupAddress classifies any address", async () => {
+  const fetchImpl = fakeFetch({ "https://api.ipapi.is/?q=185": fixture("ipapi-vpn") });
+  const address = await lookupAddress("185.65.135.10", { settings, fetchImpl });
+  assert.equal(address.ip, "185.65.135.10");
+  assert.equal(address.tunnelled, true);
 });
