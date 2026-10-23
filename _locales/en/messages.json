@@ -1,0 +1,638 @@
+{
+  "extName": {
+    "message": "BrowserIP"
+  },
+  "extDescription": {
+    "message": "Shows your browser's public IP, location and provider, and warns when your VPN is off or leaking."
+  },
+  "commandRefresh": {
+    "message": "Re-check IP and VPN status"
+  },
+  "commandOpen": {
+    "message": "Open BrowserIP"
+  },
+  "contextLookup": {
+    "message": "Look up “%s” with BrowserIP"
+  },
+  "popupEyebrow": {
+    "message": "Network intel"
+  },
+  "popupHeading": {
+    "message": "Public IP Trace"
+  },
+  "settingsTitle": {
+    "message": "Settings"
+  },
+  "historyTitle": {
+    "message": "Connection history"
+  },
+  "historyLink": {
+    "message": "View connection history"
+  },
+  "ipLabel": {
+    "message": "Browser egress IP"
+  },
+  "ipHint": {
+    "message": "(click to copy)"
+  },
+  "copyIpTitle": {
+    "message": "Copy IP address"
+  },
+  "labelVpn": {
+    "message": "VPN"
+  },
+  "labelLocation": {
+    "message": "Location"
+  },
+  "labelCountry": {
+    "message": "Country"
+  },
+  "labelProvider": {
+    "message": "Provider"
+  },
+  "labelAsn": {
+    "message": "ASN"
+  },
+  "labelTimezone": {
+    "message": "Time zone"
+  },
+  "labelSource": {
+    "message": "Source"
+  },
+  "refresh": {
+    "message": "Refresh"
+  },
+  "copyReport": {
+    "message": "Copy report"
+  },
+  "toolsHeading": {
+    "message": "Leak tests & IP lookup"
+  },
+  "webrtcTest": {
+    "message": "WebRTC test"
+  },
+  "dnsTest": {
+    "message": "DNS leak test"
+  },
+  "lookupPlaceholder": {
+    "message": "Look up an IP address"
+  },
+  "lookupButton": {
+    "message": "Look up"
+  },
+  "lookupTitle": {
+    "message": "IP lookup"
+  },
+  "lookupInvalid": {
+    "message": "Enter a valid IPv4 or IPv6 address."
+  },
+  "lookupRunning": {
+    "message": "Looking up..."
+  },
+  "lookupFailed": {
+    "message": "Lookup failed: {0}"
+  },
+  "loading": {
+    "message": "Loading..."
+  },
+  "unavailable": {
+    "message": "Unavailable"
+  },
+  "unknownProvider": {
+    "message": "an unknown provider"
+  },
+  "vpnChecking": {
+    "message": "Checking..."
+  },
+  "vpnUnavailable": {
+    "message": "Unavailable"
+  },
+  "vpnDetected": {
+    "message": "Detected"
+  },
+  "vpnNotDetected": {
+    "message": "Not detected"
+  },
+  "vpnLeaking": {
+    "message": "Leaking"
+  },
+  "vpnUnknown": {
+    "message": "Unknown"
+  },
+  "leakDetail": {
+    "message": "{0} traffic bypasses the tunnel"
+  },
+  "noVpnData": {
+    "message": "{0} has no VPN data"
+  },
+  "warningNoVpn": {
+    "message": "Warning: VPN not detected"
+  },
+  "warningLeak": {
+    "message": "Leak: {0} not tunnelled"
+  },
+  "mismatchCountry": {
+    "message": "Exit country is {0}, expected {1}"
+  },
+  "mismatchProvider": {
+    "message": "Provider is {0}, expected {1}"
+  },
+  "addressTunnelled": {
+    "message": "✓ tunnelled"
+  },
+  "addressDirect": {
+    "message": "✕ direct"
+  },
+  "addressUnknown": {
+    "message": "? unknown"
+  },
+  "addressLookupFailed": {
+    "message": "lookup failed"
+  },
+  "titleStatus": {
+    "message": "BrowserIP · VPN: {0}"
+  },
+  "titleChecked": {
+    "message": "Checked {0}"
+  },
+  "titleOutOfDate": {
+    "message": "Out of date"
+  },
+  "titleFailed": {
+    "message": "Last check failed: {0}"
+  },
+  "titleNotChecked": {
+    "message": "BrowserIP: not checked yet"
+  },
+  "titleCheckFailed": {
+    "message": "BrowserIP: check failed ({0})"
+  },
+  "changeConnected": {
+    "message": "VPN connected"
+  },
+  "changeDisconnected": {
+    "message": "VPN disconnected"
+  },
+  "changeLeak": {
+    "message": "VPN leak detected"
+  },
+  "changeUnexpectedExit": {
+    "message": "Unexpected VPN exit"
+  },
+  "changeIp": {
+    "message": "IP address changed"
+  },
+  "justNow": {
+    "message": "just now"
+  },
+  "timeWithAge": {
+    "message": "{0} ({1})"
+  },
+  "statusFetching": {
+    "message": "Fetching network details..."
+  },
+  "statusLoadFailed": {
+    "message": "Could not load IP: {0}"
+  },
+  "statusRefreshFailed": {
+    "message": "Refresh failed: {0}. Showing data from {1}."
+  },
+  "statusOutOfDate": {
+    "message": "Out of date: last checked {0}."
+  },
+  "statusChecked": {
+    "message": "Checked {0}."
+  },
+  "copiedIp": {
+    "message": "Copied {0} to the clipboard."
+  },
+  "copiedReport": {
+    "message": "Copied the report to the clipboard."
+  },
+  "copyFailed": {
+    "message": "Could not copy to the clipboard."
+  },
+  "webrtcRunning": {
+    "message": "Asking STUN servers which address WebRTC exposes..."
+  },
+  "webrtcLeak": {
+    "message": "LEAK: WebRTC exposes {0}, which is not your browser IP."
+  },
+  "webrtcOk": {
+    "message": "OK: WebRTC only exposes your browser IP ({0})."
+  },
+  "webrtcNone": {
+    "message": "OK: WebRTC exposed no public address."
+  },
+  "webrtcLocal": {
+    "message": "Local address visible to sites: {0}."
+  },
+  "webrtcFailed": {
+    "message": "WebRTC test failed: {0}"
+  },
+  "dnsRunning": {
+    "message": "Resolving test names through your DNS servers (about 5 seconds)..."
+  },
+  "dnsLeak": {
+    "message": "LEAK: your DNS lookups may bypass the VPN."
+  },
+  "dnsOk": {
+    "message": "OK: no DNS leak detected."
+  },
+  "dnsUnclear": {
+    "message": "The DNS test gave no verdict."
+  },
+  "dnsServers": {
+    "message": "DNS servers: {0}."
+  },
+  "dnsNoServers": {
+    "message": "No DNS servers were seen."
+  },
+  "dnsFailed": {
+    "message": "DNS leak test failed: {0}"
+  },
+  "reportHeading": {
+    "message": "BrowserIP report — {0}"
+  },
+  "reportWarning": {
+    "message": "Warning"
+  },
+  "reportWebrtc": {
+    "message": "WebRTC test"
+  },
+  "reportDns": {
+    "message": "DNS leak test"
+  },
+  "reportChecked": {
+    "message": "Last checked"
+  },
+  "historyHelp": {
+    "message": "VPN changes, IP changes and failed checks, newest first. Stored only on this device (last 200 events)."
+  },
+  "historyExport": {
+    "message": "Export CSV"
+  },
+  "historyClear": {
+    "message": "Clear"
+  },
+  "historyClearConfirm": {
+    "message": "Delete the whole connection history?"
+  },
+  "historyTime": {
+    "message": "Time"
+  },
+  "historyEvent": {
+    "message": "Event"
+  },
+  "historyDetails": {
+    "message": "Details"
+  },
+  "historyEmpty": {
+    "message": "Nothing recorded yet."
+  },
+  "historyFirstCheck": {
+    "message": "First check"
+  },
+  "historyCheckFailed": {
+    "message": "Check failed"
+  },
+  "sectionAlerts": {
+    "message": "Alerts"
+  },
+  "sectionChecks": {
+    "message": "Checks"
+  },
+  "sectionExpected": {
+    "message": "Expected VPN exit"
+  },
+  "sectionAppearance": {
+    "message": "Appearance"
+  },
+  "sectionGuard": {
+    "message": "Protected sites"
+  },
+  "sectionKeys": {
+    "message": "API keys"
+  },
+  "sectionShortcuts": {
+    "message": "Keyboard shortcuts"
+  },
+  "optExpectVpn": {
+    "message": "I expect to be on a VPN"
+  },
+  "optExpectVpnHelp": {
+    "message": "Show the red icon and warning when no VPN is detected. When off, a direct connection shows a blue icon."
+  },
+  "optNotify": {
+    "message": "Notify me when my VPN status or IP changes"
+  },
+  "optNotifyHelp": {
+    "message": "Only for background checks; the popup already shows the change."
+  },
+  "optBadge": {
+    "message": "Show the country code on the toolbar icon"
+  },
+  "optBadgeHelp": {
+    "message": "Alerts (OFF, LEAK, !, ?) are always shown."
+  },
+  "optPoll": {
+    "message": "Background checks"
+  },
+  "optPollHelp": {
+    "message": "Background checks only ask ipify whether your IP changed. A full lookup runs when it changes, every 6 hours, or when you press Refresh. Checks also run when the computer wakes up or comes back online."
+  },
+  "pollOff": {
+    "message": "Off"
+  },
+  "pollEvery": {
+    "message": "Every {0} min"
+  },
+  "optIpv6": {
+    "message": "Check IPv6 separately"
+  },
+  "optIpv6Help": {
+    "message": "Catches VPNs that tunnel IPv4 but leak IPv6. Costs one extra lookup when you have IPv6."
+  },
+  "optSecondOpinion": {
+    "message": "Ask a second VPN database"
+  },
+  "optSecondOpinionHelp": {
+    "message": "When ipapi.is finds no VPN, also ask proxycheck.io, so a missing entry in one database doesn't raise a false alarm."
+  },
+  "optCountry": {
+    "message": "Country"
+  },
+  "optCountryHelp": {
+    "message": "Alert when the VPN exits anywhere else."
+  },
+  "anyCountry": {
+    "message": "Any country"
+  },
+  "optProvider": {
+    "message": "Provider"
+  },
+  "optProviderHelp": {
+    "message": "Alert unless the VPN service or network name contains this text."
+  },
+  "optProviderPlaceholder": {
+    "message": "e.g. Mullvad"
+  },
+  "optTheme": {
+    "message": "Theme"
+  },
+  "themeSystem": {
+    "message": "Match system"
+  },
+  "themeDark": {
+    "message": "Dark"
+  },
+  "themeLight": {
+    "message": "Light"
+  },
+  "guardHelp": {
+    "message": "Pages on these sites are held back whenever BrowserIP can't confirm your VPN (off, leaking, unexpected exit, or not checked recently). This is best effort: it reacts as fast as the checks run, and it only affects new page loads."
+  },
+  "guardEmpty": {
+    "message": "No protected sites."
+  },
+  "guardPlaceholder": {
+    "message": "example.com"
+  },
+  "guardAdd": {
+    "message": "Add"
+  },
+  "guardAllow": {
+    "message": "Allow page"
+  },
+  "guardRemove": {
+    "message": "Remove"
+  },
+  "guardInvalid": {
+    "message": "Enter a domain such as example.com."
+  },
+  "guardTooMany": {
+    "message": "You can protect at most {0} sites."
+  },
+  "guardAdded": {
+    "message": "Added {0}."
+  },
+  "guardAddedBlockOnly": {
+    "message": "Added {0}. Without access to the site it is blocked with the browser's error page instead of an explanation."
+  },
+  "guardModeRedirect": {
+    "message": "Shows an explanation page and continues when the VPN is back"
+  },
+  "guardModeBlock": {
+    "message": "Blocked with the browser's error page (allow access for an explanation page)"
+  },
+  "keysHelp": {
+    "message": "Optional. Keys raise the free daily lookup limits and are stored only on this device."
+  },
+  "shortcutsHelp": {
+    "message": "Change shortcuts in your browser's extension shortcut settings (chrome://extensions/shortcuts in Chrome)."
+  },
+  "shortcutUnset": {
+    "message": "Not set"
+  },
+  "saved": {
+    "message": "Saved."
+  },
+  "saveFailed": {
+    "message": "Could not save: {0}"
+  },
+  "blockedTitle": {
+    "message": "Page held back"
+  },
+  "blockedExplain": {
+    "message": "This site is on your protected list, and BrowserIP can't confirm that your VPN is on. The page will open by itself once it can."
+  },
+  "blockedRecheck": {
+    "message": "Check again"
+  },
+  "blockedStale": {
+    "message": "Your VPN status hasn't been checked recently."
+  },
+  "blockedContinuing": {
+    "message": "VPN confirmed. Continuing..."
+  },
+  "labelReputation": {
+    "message": "Reputation"
+  },
+  "reputationClean": {
+    "message": "Not on blocklists"
+  },
+  "reputationAbuser": {
+    "message": "Flagged for abuse; expect CAPTCHAs"
+  },
+  "reputationListed": {
+    "message": "On blocklists ({0}); expect CAPTCHAs"
+  },
+  "reputationListedPlain": {
+    "message": "On blocklists; expect CAPTCHAs"
+  },
+  "mismatchNotMullvad": {
+    "message": "Not connected through Mullvad"
+  },
+  "sectionVpn": {
+    "message": "Your VPN"
+  },
+  "optVpnProvider": {
+    "message": "VPN service"
+  },
+  "optVpnProviderHelp": {
+    "message": "Mullvad: exact detection with Mullvad's own connection check (am.i.mullvad.net), the server name in the popup, and optional one-click connect."
+  },
+  "vpnProviderOther": {
+    "message": "Other / none"
+  },
+  "helperHeading": {
+    "message": "One-click connect (Mullvad app)"
+  },
+  "helperHelp": {
+    "message": "Install the small BrowserIP helper once. It lets the extension run Mullvad's own command-line tool to connect, disconnect, reconnect and switch country, and nothing else."
+  },
+  "helperStep1": {
+    "message": "Download the helper for your system and unpack it:"
+  },
+  "helperReleases": {
+    "message": "latest release"
+  },
+  "helperStep2": {
+    "message": "In the unpacked folder, run (macOS/Linux, then Windows):"
+  },
+  "helperStep3": {
+    "message": "Allow BrowserIP to talk to the helper and test it:"
+  },
+  "helperTest": {
+    "message": "Test helper"
+  },
+  "helperTesting": {
+    "message": "Testing..."
+  },
+  "helperOk": {
+    "message": "Helper {0} works. Mullvad: {1}"
+  },
+  "helperMissing": {
+    "message": "The helper isn't installed, or was installed for a different extension ID."
+  },
+  "helperFailed": {
+    "message": "Mullvad: {0}"
+  },
+  "helperPermissionDenied": {
+    "message": "Permission to talk to the helper was not granted."
+  },
+  "mullvadTitle": {
+    "message": "Mullvad app"
+  },
+  "mullvadConnect": {
+    "message": "Connect"
+  },
+  "mullvadDisconnect": {
+    "message": "Disconnect"
+  },
+  "mullvadReconnect": {
+    "message": "Reconnect"
+  },
+  "mullvadChooseCountry": {
+    "message": "Switch country..."
+  },
+  "mullvadSetup": {
+    "message": "Set up one-click connect"
+  },
+  "mullvadNotSetUp": {
+    "message": "Not set up"
+  },
+  "mullvadWorking": {
+    "message": "Waiting for Mullvad..."
+  },
+  "mullvadTimeout": {
+    "message": "Mullvad didn't finish in time; check the app."
+  },
+  "mullvadStateConnected": {
+    "message": "Connected · {0}"
+  },
+  "mullvadStateConnectedPlain": {
+    "message": "Connected"
+  },
+  "mullvadStateConnecting": {
+    "message": "Connecting..."
+  },
+  "mullvadStateDisconnected": {
+    "message": "Disconnected"
+  },
+  "mullvadStateDisconnecting": {
+    "message": "Disconnecting..."
+  },
+  "mullvadStateBlocked": {
+    "message": "Blocking traffic (no tunnel)"
+  },
+  "mullvadStateUnknown": {
+    "message": "Unknown state"
+  },
+  "mullvadConnectButton": {
+    "message": "Connect Mullvad"
+  },
+  "selftestTitle": {
+    "message": "Self-test"
+  },
+  "selftestLink": {
+    "message": "Run the self-test"
+  },
+  "selftestHelp": {
+    "message": "Checks every online service BrowserIP depends on, from this computer, and confirms each still answers in the format BrowserIP expects. Takes about 15 seconds."
+  },
+  "selftestPrivacy": {
+    "message": "The results include your IP addresses; check them before sharing."
+  },
+  "selftestRun": {
+    "message": "Run self-test"
+  },
+  "selftestCopy": {
+    "message": "Copy results"
+  },
+  "selftestCopied": {
+    "message": "Copied the results to the clipboard."
+  },
+  "selftestPending": {
+    "message": "Waiting"
+  },
+  "selftestRunning": {
+    "message": "Running..."
+  },
+  "selftestPass": {
+    "message": "Pass"
+  },
+  "selftestFail": {
+    "message": "Fail"
+  },
+  "selftestInfo": {
+    "message": "Note"
+  },
+  "selftestSkip": {
+    "message": "Skipped"
+  },
+  "selftestRaw": {
+    "message": "Raw response"
+  },
+  "selftestUnexpected": {
+    "message": "Unexpected response; missing: {0}"
+  },
+  "selftestNoIpv6": {
+    "message": "No IPv6 route (normal on IPv4-only networks)"
+  },
+  "selftestNeedsIp": {
+    "message": "Needs an IP address from the ipify checks"
+  },
+  "selftestNoStun": {
+    "message": "No public address via STUN (UDP blocked or WebRTC disabled)"
+  },
+  "selftestHelperNotSetUp": {
+    "message": "Helper not set up (only needed for Mullvad one-click connect)"
+  },
+  "selftestDoneOk": {
+    "message": "Done: no failures."
+  },
+  "selftestDoneFailed": {
+    "message": "Done: {0} check(s) failed."
+  }
+}

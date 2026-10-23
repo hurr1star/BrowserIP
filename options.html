@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrowserIP</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <main class="panel">
+    <p class="eyebrow">BROWSERIP</p>
+    <h1 data-i18n="settingsTitle"></h1>
+    <p>
+      <a href="history.html" data-i18n="historyLink"></a> ·
+      <a href="selftest.html" data-i18n="selftestLink"></a>
+    </p>
+
+    <form id="settings">
+      <h2 id="mullvad" data-i18n="sectionVpn"></h2>
+      <label class="option">
+        <span><span data-i18n="optVpnProvider"></span><small data-i18n="optVpnProviderHelp"></small></span>
+        <select name="vpnProvider">
+          <option value="" data-i18n="vpnProviderOther"></option>
+          <option value="mullvad">Mullvad</option>
+        </select>
+      </label>
+      <div id="helperSetup" class="option helper" hidden>
+        <strong data-i18n="helperHeading"></strong>
+        <small data-i18n="helperHelp"></small>
+        <ol class="steps">
+          <li>
+            <span data-i18n="helperStep1"></span>
+            <a id="helperReleases" target="_blank" rel="noopener" data-i18n="helperReleases"></a>
+          </li>
+          <li>
+            <span data-i18n="helperStep2"></span>
+            <code class="command" id="helperCommandUnix"></code>
+            <code class="command" id="helperCommandWindows"></code>
+          </li>
+          <li>
+            <span data-i18n="helperStep3"></span>
+            <button type="button" id="helperTest" data-i18n="helperTest"></button>
+          </li>
+        </ol>
+        <p id="helperStatus" class="status-line" aria-live="polite"></p>
+      </div>
+
+      <h2 data-i18n="sectionAlerts"></h2>
+      <label class="option">
+        <input type="checkbox" name="expectVpn">
+        <span><span data-i18n="optExpectVpn"></span><small data-i18n="optExpectVpnHelp"></small></span>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="notifyOnChange">
+        <span><span data-i18n="optNotify"></span><small data-i18n="optNotifyHelp"></small></span>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="showCountryBadge">
+        <span><span data-i18n="optBadge"></span><small data-i18n="optBadgeHelp"></small></span>
+      </label>
+
+      <h2 data-i18n="sectionChecks"></h2>
+      <label class="option">
+        <span><span data-i18n="optPoll"></span><small data-i18n="optPollHelp"></small></span>
+        <select name="pollMinutes" id="pollMinutes"></select>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="checkIpv6">
+        <span><span data-i18n="optIpv6"></span><small data-i18n="optIpv6Help"></small></span>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="secondOpinion">
+        <span><span data-i18n="optSecondOpinion"></span><small data-i18n="optSecondOpinionHelp"></small></span>
+      </label>
+
+      <h2 data-i18n="sectionExpected"></h2>
+      <label class="option">
+        <span><span data-i18n="optCountry"></span><small data-i18n="optCountryHelp"></small></span>
+        <select name="expectedCountry" id="expectedCountry"></select>
+      </label>
+      <label class="option">
+        <span><span data-i18n="optProvider"></span><small data-i18n="optProviderHelp"></small></span>
+        <input type="text" name="expectedProvider" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder:optProviderPlaceholder">
+      </label>
+
+      <h2 data-i18n="sectionAppearance"></h2>
+      <label class="option">
+        <span data-i18n="optTheme"></span>
+        <select name="theme">
+          <option value="system" data-i18n="themeSystem"></option>
+          <option value="dark" data-i18n="themeDark"></option>
+          <option value="light" data-i18n="themeLight"></option>
+        </select>
+      </label>
+    </form>
+
+    <h2 data-i18n="sectionGuard"></h2>
+    <p class="note" data-i18n="guardHelp"></p>
+    <ul id="siteList" class="site-list"></ul>
+    <form id="addSite" class="inline-form">
+      <input id="siteInput" type="text" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder:guardPlaceholder,aria-label:guardPlaceholder">
+      <button type="submit" data-i18n="guardAdd"></button>
+    </form>
+    <p id="siteStatus" class="status-line" aria-live="polite"></p>
+
+    <h2 data-i18n="sectionKeys"></h2>
+    <p class="note" data-i18n="keysHelp"></p>
+    <form id="apiKeys">
+      <label class="option">
+        <span>ipapi.is</span>
+        <input type="password" name="ipapi" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="option">
+        <span>proxycheck.io</span>
+        <input type="password" name="proxycheck" autocomplete="off" spellcheck="false">
+      </label>
+    </form>
+
+    <h2 data-i18n="sectionShortcuts"></h2>
+    <ul id="shortcuts" class="site-list"></ul>
+    <p class="note" data-i18n="shortcutsHelp"></p>
+
+    <p id="saved" class="status-line" aria-live="polite"></p>
+  </main>
+  <script type="module" src="options.js"></script>
+</body>
+</html>

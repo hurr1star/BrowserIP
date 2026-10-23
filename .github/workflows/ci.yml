@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run lint
+      - run: npm test
+      - name: Tag matches manifest version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: test "v$(node -p 'require("./manifest.json").version')" = "$GITHUB_REF_NAME"
+      - run: npm run package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: browserip-extension
+          path: dist/*.zip
+
+  helper:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: helper
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: helper/go.mod
+          cache-dependency-path: helper/go.mod
+      - run: test -z "$(gofmt -l .)"
+      - run: go vet ./...
+      - run: GOOS=windows go vet ./...
+      - run: go test ./...
+      - run: ./build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: browserip-helper
+          path: dist/helper/*
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # The Mullvad tests build and drive the real helper.
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: helper/go.mod
+          cache-dependency-path: helper/go.mod
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+  release:
+    needs: [check, helper, e2e]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    # Store publishing is opt-in: each step runs only when its secrets exist.
+    env:
+      CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+      AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: browserip-extension
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: browserip-helper
+          path: dist/helper
+      - run: gh release create "$GITHUB_REF_NAME" dist/*.zip dist/helper/* --repo "$GITHUB_REPOSITORY" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Publish to the Chrome Web Store
+        if: env.CHROME_EXTENSION_ID != ''
+        run: npx --yes chrome-webstore-upload-cli@3 upload --source dist/*.zip --auto-publish
+        env:
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+      - name: Publish to addons.mozilla.org
+        if: env.AMO_JWT_ISSUER != ''
+        run: |
+          mkdir build && unzip -q dist/*.zip -d build
+          npx --yes web-ext@8 sign --source-dir build --channel listed \
+            --api-key "$AMO_JWT_ISSUER" --api-secret "$AMO_JWT_SECRET"
+        env:
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}

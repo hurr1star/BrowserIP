@@ -1,0 +1,18 @@
+{
+  "ip": "185.65.135.10",
+  "country": "Sweden",
+  "city": "Gothenburg",
+  "longitude": 11.9746,
+  "latitude": 57.7089,
+  "mullvad_exit_ip": true,
+  "mullvad_exit_ip_hostname": "se-got-wg-001",
+  "mullvad_server_type": "WireGuard",
+  "blacklisted": {
+    "blacklisted": true,
+    "results": [
+      { "name": "Spamhaus", "link": "https://www.spamhaus.org/", "blacklisted": true },
+      { "name": "Project Honey Pot", "link": "https://www.projecthoneypot.org/", "blacklisted": false }
+    ]
+  },
+  "organization": "M247"
+}

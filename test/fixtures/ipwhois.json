@@ -1,0 +1,11 @@
+{
+  "ip": "198.51.100.7",
+  "success": true,
+  "type": "IPv4",
+  "country": "United States",
+  "country_code": "US",
+  "region": "Colorado",
+  "city": "Denver",
+  "connection": { "asn": 7922, "org": "Comcast Cable Communications, LLC", "isp": "Comcast Cable", "domain": "comcast.net" },
+  "timezone": { "id": "America/Denver" }
+}

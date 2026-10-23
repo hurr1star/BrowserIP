@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrowserIP</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <main class="panel">
+    <p class="eyebrow">BROWSERIP</p>
+    <h1 data-i18n="historyTitle"></h1>
+    <p class="note" data-i18n="historyHelp"></p>
+    <div class="toolbar">
+      <button id="exportCsv" type="button" data-i18n="historyExport"></button>
+      <button id="clearHistory" type="button" data-i18n="historyClear"></button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="historyTime"></th>
+          <th data-i18n="historyEvent"></th>
+          <th data-i18n="historyDetails"></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p id="empty" class="empty" data-i18n="historyEmpty" hidden></p>
+  </main>
+  <script type="module" src="history.js"></script>
+</body>
+</html>
