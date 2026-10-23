@@ -14,6 +14,7 @@ To show your public IP, the extension sends requests to these third-party servic
 | `ipwho.is`, `ipinfo.io` | Only if `api.ipapi.is` fails | Fallback location and provider lookup |
 | `stun.l.google.com`, `stun.cloudflare.com` | Only when you run the **WebRTC test** | See which address WebRTC exposes |
 | `bash.ws` | Only when you run the **DNS leak test** | See which DNS servers resolve your lookups |
+| `ipv4.am.i.mullvad.net`, `ipv6.am.i.mullvad.net` | Only if you chose Mullvad as your VPN; on full lookups | Whether you exit through a Mullvad server, and its blocklist status |
 
 IP addresses you look up yourself (in the popup or from the context menu) are sent to the same lookup services. Requests are sent without cookies. If you enter API keys, they are sent to their own service only. Each service's own privacy policy applies to what it receives.
 
@@ -42,4 +43,8 @@ Removing the extension deletes all of it.
 | `contextMenus` | *Look up "…" with BrowserIP* on selected text |
 | `declarativeNetRequest` | Hold back protected sites while the VPN is not confirmed |
 | Optional: access to a protected site | Show an explanation page instead of a plain block for that site |
-| Optional: `proxy` | Read (never change) the browser's proxy settings, only if you turn this on |
+| Optional: `nativeMessaging` | Talk to the BrowserIP helper, only if you set it up (Mullvad one-click connect) |
+
+## The Mullvad helper
+
+The optional helper runs on your computer, and only when BrowserIP talks to it. It has no network access of its own and stores nothing. It runs Mullvad's command-line tool for a fixed set of commands: status, connect, disconnect, reconnect, set location, list servers and version.

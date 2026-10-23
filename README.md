@@ -11,7 +11,8 @@ Available in English, German and Spanish.
 - Detects VPN, proxy, Tor and hosting-network exits, and names the VPN service when known
 - Asks a second VPN database (proxycheck.io) before declaring "no VPN", to cut false alarms
 - Alerts when the VPN exits in the wrong country or through the wrong provider
-- Shows the browser's own proxy settings (optional)
+- Warns when your IP is on blocklists or flagged for abuse (the usual cause of endless CAPTCHAs)
+- **Mullvad support**: exact detection with Mullvad's own check, and one-click Connect / Disconnect / Reconnect / Switch country from the popup (see below)
 
 **Leak tests**
 - **IPv6 leaks**: IPv4 goes through the tunnel but IPv6 doesn't
@@ -39,7 +40,7 @@ Available in English, German and Spanish.
 | Green | country code | Traffic exits through a VPN, proxy, Tor or hosting network as expected |
 | Red | `OFF` | No VPN detected and you said you expect one |
 | Red | `LEAK` | One IP family is tunnelled and the other is not |
-| Red | `!SE`, `!ISP` | Exit country or provider doesn't match what you expect |
+| Red | `!SE`, `!ISP` | Exit country or provider doesn't match what you expect (or, for Mullvad users, the exit isn't a Mullvad server) |
 | Blue | country code | Direct connection, and you don't expect a VPN |
 | Gray | `?` | Unknown, not checked yet, last check failed, or out of date |
 
@@ -51,6 +52,7 @@ Open the ⚙ in the popup or the extension's **Options**.
 
 | Setting | Default |
 | --- | --- |
+| Your VPN (other/none or Mullvad) | other/none |
 | I expect to be on a VPN | on |
 | Notify on change | on |
 | Country code badge | on |
@@ -60,8 +62,17 @@ Open the ⚙ in the popup or the extension's **Options**.
 | Expected country / provider | any |
 | Theme | match system (dark or light) |
 | Protected sites | none |
-| Show browser proxy settings | off (asks for permission when turned on) |
 | API keys for ipapi.is and proxycheck.io | none (stored only on this device) |
+
+### Mullvad
+
+Choose **Your VPN → Mullvad** in the settings:
+
+- **Exact detection.** Each full lookup also asks Mullvad's own connection check (`ipv4.am.i.mullvad.net` and `ipv6.am.i.mullvad.net`). A Mullvad exit is recognized by name (e.g. `Mullvad (se-got-wg-001, WireGuard)`) instead of by IP reputation. A tunnel through anything else raises a "Not connected through Mullvad" alert.
+- **Blocklist status** of the Mullvad exit IP appears under *Reputation*.
+- **One-click control (optional).** A browser extension can't start programs on its own, so this needs the small [BrowserIP helper](helper/README.md), installed once. The popup then shows the app's state with **Connect / Disconnect**, **Reconnect** and **Switch country** (from your Mullvad server list). The blocked page for a protected site gets a **Connect Mullvad** button, and so do "VPN disconnected" notifications (Chrome only; Firefox notifications have no buttons).
+
+Helper setup, in short: download the archive for your system from the [latest release](https://github.com/hurr1star/BrowserIP/releases/latest). Run `install.sh --extension-id <id>` (macOS/Linux) or `install.ps1 -ExtensionId <id>` (Windows). The settings page shows the exact command with your ID. Then press **Test helper**. The helper only accepts a fixed set of commands that map to Mullvad's own CLI, and only BrowserIP can start it.
 
 ### Protected sites
 
@@ -82,7 +93,7 @@ Pages are held back whenever the status isn't a fresh, tunnelled result that mat
 
 Opening the popup runs a check, and **Refresh** forces a full lookup. Every request has an 8-second timeout. If a check fails, the popup keeps the last result and marks it out of date.
 
-The IP shown is the address your *browser* uses. If the browser goes through a proxy, it can differ from the rest of your system; turn on the proxy setting to see why.
+The IP shown is the address your *browser* uses. If the browser goes through a proxy, it can differ from the rest of your system.
 
 ## Architecture
 
@@ -106,7 +117,7 @@ BrowserIP/
     guard.js             # Protected-site rules
     history.js           # History entries and CSV
     dnsleak.js, webrtc.js# Leak tests
-    proxyinfo.js         # Browser proxy settings, described
+    mullvad.js           # Mullvad connection check and helper client
     report.js            # Plain-text report
     lookup-view.js       # Shared lookup rendering
     settings.js, ip.js, format.js, i18n.js
@@ -114,6 +125,7 @@ BrowserIP/
   test/                  # Unit tests (node:test) with recorded provider responses
   e2e/                   # Browser tests (Playwright + Chromium, network mocked)
   scripts/               # Manifest/translation checks, locale build, packaging
+  helper/                # Native helper for the Mullvad app (Go), installers, tests
 ```
 
 ## Installation (Developer Mode)
@@ -135,7 +147,9 @@ BrowserIP/
 ```sh
 npm install
 npm test           # unit tests
-npm run test:e2e   # browser tests (needs Chromium: npx playwright install chromium)
+npm run test:e2e   # browser tests (needs Chromium: npx playwright install chromium;
+                   #   the Mullvad tests also need Go, and are skipped without it)
+(cd helper && go test ./...)   # helper tests
 npm run lint       # ESLint
 npm run check      # manifest, version, files, BOMs, translations
 npm run locales    # regenerate lib/messages-en.js after editing _locales/en
@@ -148,7 +162,7 @@ npm run package    # dist/browserip-<version>.zip
 
 ### Releases
 
-CI lints, tests (unit and browser) and packages on every push and pull request. Pushing a `v*` tag that matches the manifest version creates a GitHub release with the zip. It also publishes to the stores when the matching repository secrets are set:
+CI lints, tests (unit, browser and helper) and packages on every push and pull request. Pushing a `v*` tag that matches the manifest version creates a GitHub release with the extension zip and the helper archives for Windows, macOS and Linux. It also publishes to the stores when the matching repository secrets are set:
 
 - **Chrome Web Store**: `CHROME_EXTENSION_ID`, `CHROME_CLIENT_ID`, `CHROME_CLIENT_SECRET`, `CHROME_REFRESH_TOKEN` (see [chrome-webstore-upload-cli](https://github.com/fregante/chrome-webstore-upload-cli) for creating them)
 - **addons.mozilla.org**: `AMO_JWT_ISSUER`, `AMO_JWT_SECRET` (API keys from the AMO developer hub). New Firefox listings must also declare `browser_specific_settings.gecko.data_collection_permissions` in the manifest, and the first listed version needs its metadata entered on AMO.
@@ -162,6 +176,8 @@ There is no analytics, telemetry or server of our own. See [PRIVACY.md](PRIVACY.
 - VPN detection depends on ipapi.is and proxycheck.io's IP reputation data, not on inspecting your local network.
 - The DNS leak test relies on bash.ws; if that service is down, the test fails.
 - Chrome may delay background checks while the browser is idle or asleep. The icon greys out instead of showing an outdated result.
+- The helper is unsigned. The installers clear the download quarantine (macOS) and the "downloaded from the internet" flag (Windows), but a strict security policy may still block it.
+- The helper is tested against a fake Mullvad CLI that reproduces the documented output formats, not yet against every Mullvad release.
 - `blocked.html` must be web-accessible for the redirect to work, so websites can detect that BrowserIP is installed.
 
 ## License
