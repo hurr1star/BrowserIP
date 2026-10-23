@@ -571,5 +571,68 @@
   },
   "mullvadConnectButton": {
     "message": "Mullvad verbinden"
+  },
+  "selftestTitle": {
+    "message": "Selbsttest"
+  },
+  "selftestLink": {
+    "message": "Selbsttest ausführen"
+  },
+  "selftestHelp": {
+    "message": "Prüft von diesem Computer aus jeden Onlinedienst, den BrowserIP nutzt, und bestätigt, dass jeder noch im erwarteten Format antwortet. Dauert etwa 15 Sekunden."
+  },
+  "selftestPrivacy": {
+    "message": "Die Ergebnisse enthalten deine IP-Adressen; prüfe sie, bevor du sie teilst."
+  },
+  "selftestRun": {
+    "message": "Selbsttest starten"
+  },
+  "selftestCopy": {
+    "message": "Ergebnisse kopieren"
+  },
+  "selftestCopied": {
+    "message": "Ergebnisse in die Zwischenablage kopiert."
+  },
+  "selftestPending": {
+    "message": "Wartet"
+  },
+  "selftestRunning": {
+    "message": "Läuft..."
+  },
+  "selftestPass": {
+    "message": "OK"
+  },
+  "selftestFail": {
+    "message": "Fehler"
+  },
+  "selftestInfo": {
+    "message": "Hinweis"
+  },
+  "selftestSkip": {
+    "message": "Übersprungen"
+  },
+  "selftestRaw": {
+    "message": "Rohantwort"
+  },
+  "selftestUnexpected": {
+    "message": "Unerwartete Antwort; es fehlt: {0}"
+  },
+  "selftestNoIpv6": {
+    "message": "Keine IPv6-Route (normal in reinen IPv4-Netzen)"
+  },
+  "selftestNeedsIp": {
+    "message": "Benötigt eine IP-Adresse aus den ipify-Prüfungen"
+  },
+  "selftestNoStun": {
+    "message": "Keine öffentliche Adresse über STUN (UDP blockiert oder WebRTC deaktiviert)"
+  },
+  "selftestHelperNotSetUp": {
+    "message": "Helfer nicht eingerichtet (nur für Mullvad-Verbinden mit einem Klick nötig)"
+  },
+  "selftestDoneOk": {
+    "message": "Fertig: keine Fehler."
+  },
+  "selftestDoneFailed": {
+    "message": "Fertig: {0} Prüfung(en) fehlgeschlagen."
   }
 }

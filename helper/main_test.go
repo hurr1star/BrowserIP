@@ -153,6 +153,17 @@ func TestParseStatusJSON(t *testing.T) {
 	}
 }
 
+func TestStatusIncludesRawOutput(t *testing.T) {
+	cli := &fakeCLI{output: map[string]string{"status": "Disconnected\n"}}
+	resp := call(t, cli, `{"cmd":"status"}`)
+	if resp["state"] != "disconnected" {
+		t.Fatalf("resp = %v", resp)
+	}
+	if got := truncate(strings.Repeat("x", 600), maxRawBytes); len(got) != maxRawBytes+3 {
+		t.Fatalf("truncate kept %d bytes", len(got))
+	}
+}
+
 func TestParseCountries(t *testing.T) {
 	out := "Albania (al)\n\tTirana (tia) @ 41.32795°N, 19.81902°W\n\t\tal-tia-wg-001 (31.171.153.66, 2a04:27c0:0:3::f001) - WireGuard\nSweden (se)\r\n\tGothenburg (got) @ 57.70887°N\n"
 	want := []country{{Code: "al", Name: "Albania"}, {Code: "se", Name: "Sweden"}}

@@ -571,5 +571,68 @@
   },
   "mullvadConnectButton": {
     "message": "Conectar Mullvad"
+  },
+  "selftestTitle": {
+    "message": "Autodiagnóstico"
+  },
+  "selftestLink": {
+    "message": "Ejecutar el autodiagnóstico"
+  },
+  "selftestHelp": {
+    "message": "Comprueba desde este equipo cada servicio en línea del que depende BrowserIP y confirma que todos siguen respondiendo en el formato esperado. Tarda unos 15 segundos."
+  },
+  "selftestPrivacy": {
+    "message": "Los resultados incluyen tus direcciones IP; revísalos antes de compartirlos."
+  },
+  "selftestRun": {
+    "message": "Iniciar autodiagnóstico"
+  },
+  "selftestCopy": {
+    "message": "Copiar resultados"
+  },
+  "selftestCopied": {
+    "message": "Resultados copiados al portapapeles."
+  },
+  "selftestPending": {
+    "message": "En espera"
+  },
+  "selftestRunning": {
+    "message": "En curso..."
+  },
+  "selftestPass": {
+    "message": "Correcto"
+  },
+  "selftestFail": {
+    "message": "Error"
+  },
+  "selftestInfo": {
+    "message": "Nota"
+  },
+  "selftestSkip": {
+    "message": "Omitido"
+  },
+  "selftestRaw": {
+    "message": "Respuesta sin procesar"
+  },
+  "selftestUnexpected": {
+    "message": "Respuesta inesperada; falta: {0}"
+  },
+  "selftestNoIpv6": {
+    "message": "Sin ruta IPv6 (normal en redes solo IPv4)"
+  },
+  "selftestNeedsIp": {
+    "message": "Necesita una dirección IP de las comprobaciones de ipify"
+  },
+  "selftestNoStun": {
+    "message": "Ninguna dirección pública vía STUN (UDP bloqueado o WebRTC desactivado)"
+  },
+  "selftestHelperNotSetUp": {
+    "message": "Asistente sin configurar (solo hace falta para conectar Mullvad con un clic)"
+  },
+  "selftestDoneOk": {
+    "message": "Terminado: sin errores."
+  },
+  "selftestDoneFailed": {
+    "message": "Terminado: {0} comprobación(es) fallida(s)."
   }
 }

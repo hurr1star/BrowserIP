@@ -29,7 +29,11 @@ type tunnelStatus struct {
 	State    string `json:"state"`
 	Relay    string `json:"relay,omitempty"`
 	Location string `json:"location,omitempty"`
+	// Raw is the start of the CLI's output, for diagnosing parse problems.
+	Raw string `json:"raw,omitempty"`
 }
+
+const maxRawBytes = 500
 
 // Browsers start native hosts with a minimal PATH (on macOS it lacks
 // /usr/local/bin), so look in the places Mullvad installs its CLI as well.
@@ -94,6 +98,7 @@ func (c execCLI) status() (tunnelStatus, error) {
 	// Recent CLIs can print JSON; older ones only text.
 	if out, err := c.run("status", "--json"); err == nil {
 		if status, ok := parseStatusJSON(out); ok {
+			status.Raw = truncate(out, maxRawBytes)
 			return status, nil
 		}
 	}
@@ -101,7 +106,17 @@ func (c execCLI) status() (tunnelStatus, error) {
 	if err != nil {
 		return tunnelStatus{}, err
 	}
-	return parseStatusText(out), nil
+	status := parseStatusText(out)
+	status.Raw = truncate(out, maxRawBytes)
+	return status, nil
+}
+
+func truncate(text string, limit int) string {
+	text = strings.TrimSpace(text)
+	if len(text) <= limit {
+		return text
+	}
+	return text[:limit] + "..."
 }
 
 var (

@@ -88,7 +88,13 @@ func handle(raw []byte, cli mullvadCLI) response {
 		if err != nil {
 			return failure(err)
 		}
-		return response{"ok": true, "state": status.State, "relay": status.Relay, "location": status.Location}
+		return response{
+			"ok":       true,
+			"state":    status.State,
+			"relay":    status.Relay,
+			"location": status.Location,
+			"raw":      status.Raw,
+		}
 	case "connect", "disconnect", "reconnect":
 		if _, err := cli.run(req.Cmd); err != nil {
 			return failure(err)

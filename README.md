@@ -30,6 +30,7 @@ Available in English, German and Spanish.
 **Tools**
 - Look up any IP address from the popup, or right-click selected text → *Look up "…" with BrowserIP*
 - Copy a plain-text report for support tickets
+- **Self-test** (Settings → *Run the self-test*): calls every online service BrowserIP depends on from your machine and checks each response still has the expected fields. It shows the raw responses, and the results can be copied for a bug report
 - Click the IP to copy it
 - Keyboard shortcuts: **Alt+Shift+I** opens the popup and **Alt+Shift+U** re-checks. Chrome won't assign a shortcut that's already taken; check them in the extension's settings.
 
@@ -177,7 +178,7 @@ There is no analytics, telemetry or server of our own. See [PRIVACY.md](PRIVACY.
 - The DNS leak test relies on bash.ws; if that service is down, the test fails.
 - Chrome may delay background checks while the browser is idle or asleep. The icon greys out instead of showing an outdated result.
 - The helper is unsigned. The installers clear the download quarantine (macOS) and the "downloaded from the internet" flag (Windows), but a strict security policy may still block it.
-- The helper is tested against a fake Mullvad CLI that reproduces the documented output formats, not yet against every Mullvad release.
+- The helper is tested against a fake Mullvad CLI that reproduces the documented output formats, not yet against every Mullvad release. The self-test's last check runs the real CLI through the helper and includes its raw output.
 - `blocked.html` must be web-accessible for the redirect to work, so websites can detect that BrowserIP is installed.
 
 ## License

@@ -571,5 +571,68 @@
   },
   "mullvadConnectButton": {
     "message": "Connect Mullvad"
+  },
+  "selftestTitle": {
+    "message": "Self-test"
+  },
+  "selftestLink": {
+    "message": "Run the self-test"
+  },
+  "selftestHelp": {
+    "message": "Checks every online service BrowserIP depends on, from this computer, and confirms each still answers in the format BrowserIP expects. Takes about 15 seconds."
+  },
+  "selftestPrivacy": {
+    "message": "The results include your IP addresses; check them before sharing."
+  },
+  "selftestRun": {
+    "message": "Run self-test"
+  },
+  "selftestCopy": {
+    "message": "Copy results"
+  },
+  "selftestCopied": {
+    "message": "Copied the results to the clipboard."
+  },
+  "selftestPending": {
+    "message": "Waiting"
+  },
+  "selftestRunning": {
+    "message": "Running..."
+  },
+  "selftestPass": {
+    "message": "Pass"
+  },
+  "selftestFail": {
+    "message": "Fail"
+  },
+  "selftestInfo": {
+    "message": "Note"
+  },
+  "selftestSkip": {
+    "message": "Skipped"
+  },
+  "selftestRaw": {
+    "message": "Raw response"
+  },
+  "selftestUnexpected": {
+    "message": "Unexpected response; missing: {0}"
+  },
+  "selftestNoIpv6": {
+    "message": "No IPv6 route (normal on IPv4-only networks)"
+  },
+  "selftestNeedsIp": {
+    "message": "Needs an IP address from the ipify checks"
+  },
+  "selftestNoStun": {
+    "message": "No public address via STUN (UDP blocked or WebRTC disabled)"
+  },
+  "selftestHelperNotSetUp": {
+    "message": "Helper not set up (only needed for Mullvad one-click connect)"
+  },
+  "selftestDoneOk": {
+    "message": "Done: no failures."
+  },
+  "selftestDoneFailed": {
+    "message": "Done: {0} check(s) failed."
   }
 }

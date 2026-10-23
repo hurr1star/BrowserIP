@@ -165,6 +165,88 @@ td.event {
   font-size: 13px;
 }
 
+.selftest-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.selftest-item {
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--row-border);
+  border-left: 3px solid var(--line);
+  background: var(--surface);
+  font-size: 13px;
+}
+
+.selftest-item.is-pass {
+  border-left-color: var(--ok);
+}
+
+.selftest-item.is-fail {
+  border-left-color: var(--danger);
+}
+
+.selftest-item.is-info,
+.selftest-item.is-skip {
+  border-left-color: var(--stale);
+}
+
+.selftest-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.selftest-status {
+  flex-shrink: 0;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.is-pass .selftest-status {
+  color: var(--ok);
+}
+
+.is-fail .selftest-status {
+  color: var(--danger);
+}
+
+.is-info .selftest-status,
+.is-skip .selftest-status {
+  color: var(--stale);
+}
+
+.selftest-summary {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  word-break: break-word;
+}
+
+.selftest-item details {
+  margin-top: 6px;
+  font-size: 11px;
+}
+
+.selftest-item summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.selftest-item pre {
+  max-height: 240px;
+  overflow: auto;
+  margin: 6px 0 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 .blocked-host {
   font-size: 20px;
   font-weight: 700;
