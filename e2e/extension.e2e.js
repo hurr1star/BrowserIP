@@ -110,6 +110,15 @@ async function mockNetwork(route) {
     const data = LOOKUPS[url.searchParams.get("q")];
     return data && scenario !== "offline" ? route.fulfill({ json: data }) : route.fulfill({ status: 503, body: "" });
   }
+  if (scenario === "offline" && (url.host === "ipwho.is" || url.host === "ipinfo.io")) {
+    return route.fulfill({ status: 503, body: "" });
+  }
+  if (url.host === "ipwho.is") {
+    return route.fulfill({ json: { ...fixture("ipwhois"), ip: current.v4 ?? HOME_IP } });
+  }
+  if (url.host === "ipinfo.io") {
+    return route.fulfill({ json: { ...fixture("ipinfo"), ip: current.v4 ?? HOME_IP } });
+  }
   if (url.host === "proxycheck.io") {
     const ip = url.pathname.split("/").pop();
     return route.fulfill({ json: { status: "ok", [ip]: { proxy: "no", type: "Residential" } } });
@@ -192,10 +201,9 @@ before(async () => {
     args: [`--disable-extensions-except=${extensionDir}`, `--load-extension=${extensionDir}`],
     env: { ...process.env, BROWSERIP_MULLVAD_CLI: fakeCli, FAKE_MULLVAD_STATE: join(workDir, "mullvad-state") }
   });
-  await context.route(
-    /^https?:\/\/[^/]*(ipify\.org|ipapi\.is|proxycheck\.io|bash\.ws|mullvad\.net|\.test)\//,
-    mockNetwork
-  );
+  // Every web request goes through the mock, which aborts anything it doesn't
+  // recognize, so tests never reach real services (CI runners have internet).
+  await context.route(/^https?:\/\//, mockNetwork);
   [worker] = context.serviceWorkers();
   worker ??= await context.waitForEvent("serviceworker");
   extensionUrl = `chrome-extension://${new URL(worker.url()).host}`;
@@ -435,5 +443,37 @@ test("protected site: Connect Mullvad on the blocked page", { skip: !goAvailable
   assert.equal(await page.textContent("#site"), "http://guarded.test/account");
   writeFileSync(join(workDir, "mullvad-state"), "disconnected\n");
   await setSettings({});
+  await page.close();
+});
+
+test("self-test page checks every service", { skip: !goAvailable && "needs Go" }, async () => {
+  scenario = "vpn";
+  const page = await context.newPage();
+  await page.goto(`${extensionUrl}/selftest.html`);
+  await page.click("#run");
+  await page.waitForFunction(() => /^Done/.test(document.getElementById("status").textContent), null, {
+    timeout: 60000
+  });
+  const results = await page.$$eval(".selftest-item", (items) =>
+    items.map((item) => [item.querySelector("strong").textContent, item.className.replace("selftest-item is-", "")])
+  );
+  assert.deepEqual(Object.fromEntries(results), {
+    "ipify (IPv4)": "pass",
+    "ipify (IPv6)": "info",
+    "ipapi.is": "pass",
+    "ipwho.is": "pass",
+    "ipinfo.io": "pass",
+    "proxycheck.io": "pass",
+    "am.i.mullvad.net (IPv4)": "pass",
+    "am.i.mullvad.net (IPv6)": "info",
+    "bash.ws (DNS leak test)": "pass",
+    // STUN uses UDP, which the mock can't intercept; real STUN servers are
+    // reachable on CI but not in every sandbox.
+    "WebRTC (STUN)": results.find(([name]) => name === "WebRTC (STUN)")[1],
+    "BrowserIP helper + Mullvad CLI": "pass"
+  });
+  assert.ok(["pass", "info"].includes(Object.fromEntries(results)["WebRTC (STUN)"]));
+  assert.equal(await page.textContent("#status"), "Done: no failures.");
+  await screenshot(page, "selftest");
   await page.close();
 });
