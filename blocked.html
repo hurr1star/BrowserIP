@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrowserIP</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <main class="panel">
+    <p class="eyebrow">BROWSERIP</p>
+    <h1 data-i18n="blockedTitle"></h1>
+    <p id="blockedHost" class="blocked-host"></p>
+    <p data-i18n="blockedExplain"></p>
+    <div id="reason" class="vpn-warning" role="alert"></div>
+    <div class="toolbar">
+      <button id="recheck" type="button" data-i18n="blockedRecheck"></button>
+      <button id="openOptions" type="button" data-i18n="settingsTitle"></button>
+    </div>
+    <p id="status" class="status-line" aria-live="polite"></p>
+  </main>
+  <script type="module" src="blocked.js"></script>
+</body>
+</html>

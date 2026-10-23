@@ -1,0 +1,491 @@
+{
+  "extName": {
+    "message": "BrowserIP"
+  },
+  "extDescription": {
+    "message": "Zeigt die öffentliche IP, den Standort und den Anbieter deines Browsers und warnt, wenn dein VPN aus ist oder Daten durchsickern."
+  },
+  "commandRefresh": {
+    "message": "IP- und VPN-Status erneut prüfen"
+  },
+  "commandOpen": {
+    "message": "BrowserIP öffnen"
+  },
+  "contextLookup": {
+    "message": "„%s“ mit BrowserIP nachschlagen"
+  },
+  "popupEyebrow": {
+    "message": "Netzwerk-Info"
+  },
+  "popupHeading": {
+    "message": "Öffentliche IP"
+  },
+  "settingsTitle": {
+    "message": "Einstellungen"
+  },
+  "historyTitle": {
+    "message": "Verbindungsverlauf"
+  },
+  "historyLink": {
+    "message": "Verbindungsverlauf ansehen"
+  },
+  "ipLabel": {
+    "message": "Ausgangs-IP des Browsers"
+  },
+  "ipHint": {
+    "message": "(zum Kopieren klicken)"
+  },
+  "copyIpTitle": {
+    "message": "IP-Adresse kopieren"
+  },
+  "labelVpn": {
+    "message": "VPN"
+  },
+  "labelLocation": {
+    "message": "Standort"
+  },
+  "labelCountry": {
+    "message": "Land"
+  },
+  "labelProvider": {
+    "message": "Anbieter"
+  },
+  "labelAsn": {
+    "message": "ASN"
+  },
+  "labelTimezone": {
+    "message": "Zeitzone"
+  },
+  "labelSource": {
+    "message": "Quelle"
+  },
+  "labelProxy": {
+    "message": "Browser-Proxy"
+  },
+  "refresh": {
+    "message": "Aktualisieren"
+  },
+  "copyReport": {
+    "message": "Bericht kopieren"
+  },
+  "toolsHeading": {
+    "message": "Lecktests & IP-Suche"
+  },
+  "webrtcTest": {
+    "message": "WebRTC-Test"
+  },
+  "dnsTest": {
+    "message": "DNS-Lecktest"
+  },
+  "lookupPlaceholder": {
+    "message": "IP-Adresse nachschlagen"
+  },
+  "lookupButton": {
+    "message": "Suchen"
+  },
+  "lookupTitle": {
+    "message": "IP-Suche"
+  },
+  "lookupInvalid": {
+    "message": "Gib eine gültige IPv4- oder IPv6-Adresse ein."
+  },
+  "lookupRunning": {
+    "message": "Wird nachgeschlagen..."
+  },
+  "lookupFailed": {
+    "message": "Suche fehlgeschlagen: {0}"
+  },
+  "loading": {
+    "message": "Wird geladen..."
+  },
+  "unavailable": {
+    "message": "Nicht verfügbar"
+  },
+  "unknownProvider": {
+    "message": "ein unbekannter Anbieter"
+  },
+  "vpnChecking": {
+    "message": "Wird geprüft..."
+  },
+  "vpnUnavailable": {
+    "message": "Nicht verfügbar"
+  },
+  "vpnDetected": {
+    "message": "Erkannt"
+  },
+  "vpnNotDetected": {
+    "message": "Nicht erkannt"
+  },
+  "vpnLeaking": {
+    "message": "Leck"
+  },
+  "vpnUnknown": {
+    "message": "Unbekannt"
+  },
+  "leakDetail": {
+    "message": "{0}-Verkehr umgeht den Tunnel"
+  },
+  "noVpnData": {
+    "message": "{0} liefert keine VPN-Daten"
+  },
+  "warningNoVpn": {
+    "message": "Warnung: Kein VPN erkannt"
+  },
+  "warningLeak": {
+    "message": "Leck: {0} nicht getunnelt"
+  },
+  "mismatchCountry": {
+    "message": "Ausgangsland ist {0}, erwartet {1}"
+  },
+  "mismatchProvider": {
+    "message": "Anbieter ist {0}, erwartet {1}"
+  },
+  "addressTunnelled": {
+    "message": "✓ getunnelt"
+  },
+  "addressDirect": {
+    "message": "✕ direkt"
+  },
+  "addressUnknown": {
+    "message": "? unbekannt"
+  },
+  "addressLookupFailed": {
+    "message": "Suche fehlgeschlagen"
+  },
+  "titleStatus": {
+    "message": "BrowserIP · VPN: {0}"
+  },
+  "titleChecked": {
+    "message": "Geprüft {0}"
+  },
+  "titleOutOfDate": {
+    "message": "Veraltet"
+  },
+  "titleFailed": {
+    "message": "Letzte Prüfung fehlgeschlagen: {0}"
+  },
+  "titleNotChecked": {
+    "message": "BrowserIP: noch nicht geprüft"
+  },
+  "titleCheckFailed": {
+    "message": "BrowserIP: Prüfung fehlgeschlagen ({0})"
+  },
+  "changeConnected": {
+    "message": "VPN verbunden"
+  },
+  "changeDisconnected": {
+    "message": "VPN getrennt"
+  },
+  "changeLeak": {
+    "message": "VPN-Leck erkannt"
+  },
+  "changeUnexpectedExit": {
+    "message": "Unerwarteter VPN-Ausgang"
+  },
+  "changeIp": {
+    "message": "IP-Adresse geändert"
+  },
+  "justNow": {
+    "message": "gerade eben"
+  },
+  "timeWithAge": {
+    "message": "{0} ({1})"
+  },
+  "statusFetching": {
+    "message": "Netzwerkdaten werden abgerufen..."
+  },
+  "statusLoadFailed": {
+    "message": "IP konnte nicht geladen werden: {0}"
+  },
+  "statusRefreshFailed": {
+    "message": "Aktualisierung fehlgeschlagen: {0}. Angezeigt werden Daten von {1}."
+  },
+  "statusOutOfDate": {
+    "message": "Veraltet: zuletzt geprüft {0}."
+  },
+  "statusChecked": {
+    "message": "Geprüft {0}."
+  },
+  "copiedIp": {
+    "message": "{0} in die Zwischenablage kopiert."
+  },
+  "copiedReport": {
+    "message": "Bericht in die Zwischenablage kopiert."
+  },
+  "copyFailed": {
+    "message": "Kopieren in die Zwischenablage fehlgeschlagen."
+  },
+  "webrtcRunning": {
+    "message": "STUN-Server werden gefragt, welche Adresse WebRTC preisgibt..."
+  },
+  "webrtcLeak": {
+    "message": "LECK: WebRTC gibt {0} preis, nicht deine Browser-IP."
+  },
+  "webrtcOk": {
+    "message": "OK: WebRTC gibt nur deine Browser-IP preis ({0})."
+  },
+  "webrtcNone": {
+    "message": "OK: WebRTC hat keine öffentliche Adresse preisgegeben."
+  },
+  "webrtcLocal": {
+    "message": "Für Websites sichtbare lokale Adresse: {0}."
+  },
+  "webrtcFailed": {
+    "message": "WebRTC-Test fehlgeschlagen: {0}"
+  },
+  "dnsRunning": {
+    "message": "Testnamen werden über deine DNS-Server aufgelöst (ca. 5 Sekunden)..."
+  },
+  "dnsLeak": {
+    "message": "LECK: Deine DNS-Anfragen umgehen möglicherweise das VPN."
+  },
+  "dnsOk": {
+    "message": "OK: Kein DNS-Leck erkannt."
+  },
+  "dnsUnclear": {
+    "message": "Der DNS-Test lieferte kein Ergebnis."
+  },
+  "dnsServers": {
+    "message": "DNS-Server: {0}."
+  },
+  "dnsNoServers": {
+    "message": "Es wurden keine DNS-Server gesehen."
+  },
+  "dnsFailed": {
+    "message": "DNS-Lecktest fehlgeschlagen: {0}"
+  },
+  "proxyNone": {
+    "message": "Keiner (direkt)"
+  },
+  "proxySystem": {
+    "message": "Systemeinstellungen"
+  },
+  "proxyAutoDetect": {
+    "message": "Automatisch erkennen"
+  },
+  "proxyPac": {
+    "message": "PAC-Skript ({0})"
+  },
+  "proxyInlinePac": {
+    "message": "eingebettet"
+  },
+  "proxyFixed": {
+    "message": "Fest: {0}"
+  },
+  "proxyByExtension": {
+    "message": "(von einer anderen Erweiterung gesetzt)"
+  },
+  "reportHeading": {
+    "message": "BrowserIP-Bericht — {0}"
+  },
+  "reportWarning": {
+    "message": "Warnung"
+  },
+  "reportWebrtc": {
+    "message": "WebRTC-Test"
+  },
+  "reportDns": {
+    "message": "DNS-Lecktest"
+  },
+  "reportChecked": {
+    "message": "Zuletzt geprüft"
+  },
+  "historyHelp": {
+    "message": "VPN-Wechsel, IP-Wechsel und fehlgeschlagene Prüfungen, neueste zuerst. Nur auf diesem Gerät gespeichert (letzte 200 Ereignisse)."
+  },
+  "historyExport": {
+    "message": "CSV exportieren"
+  },
+  "historyClear": {
+    "message": "Leeren"
+  },
+  "historyClearConfirm": {
+    "message": "Den gesamten Verbindungsverlauf löschen?"
+  },
+  "historyTime": {
+    "message": "Zeit"
+  },
+  "historyEvent": {
+    "message": "Ereignis"
+  },
+  "historyDetails": {
+    "message": "Details"
+  },
+  "historyEmpty": {
+    "message": "Noch nichts aufgezeichnet."
+  },
+  "historyFirstCheck": {
+    "message": "Erste Prüfung"
+  },
+  "historyCheckFailed": {
+    "message": "Prüfung fehlgeschlagen"
+  },
+  "sectionAlerts": {
+    "message": "Warnungen"
+  },
+  "sectionChecks": {
+    "message": "Prüfungen"
+  },
+  "sectionExpected": {
+    "message": "Erwarteter VPN-Ausgang"
+  },
+  "sectionAppearance": {
+    "message": "Darstellung"
+  },
+  "sectionGuard": {
+    "message": "Geschützte Websites"
+  },
+  "sectionProxy": {
+    "message": "Browser-Proxy"
+  },
+  "sectionKeys": {
+    "message": "API-Schlüssel"
+  },
+  "sectionShortcuts": {
+    "message": "Tastenkürzel"
+  },
+  "optExpectVpn": {
+    "message": "Ich erwarte, mit einem VPN verbunden zu sein"
+  },
+  "optExpectVpnHelp": {
+    "message": "Rotes Symbol und Warnung anzeigen, wenn kein VPN erkannt wird. Wenn aus, zeigt eine direkte Verbindung ein blaues Symbol."
+  },
+  "optNotify": {
+    "message": "Benachrichtigen, wenn sich VPN-Status oder IP ändern"
+  },
+  "optNotifyHelp": {
+    "message": "Nur bei Hintergrundprüfungen; das Popup zeigt die Änderung ohnehin an."
+  },
+  "optBadge": {
+    "message": "Ländercode auf dem Symbol anzeigen"
+  },
+  "optBadgeHelp": {
+    "message": "Warnungen (OFF, LEAK, !, ?) werden immer angezeigt."
+  },
+  "optPoll": {
+    "message": "Hintergrundprüfungen"
+  },
+  "optPollHelp": {
+    "message": "Hintergrundprüfungen fragen nur ipify, ob sich deine IP geändert hat. Eine vollständige Abfrage läuft bei einer Änderung, alle 6 Stunden oder wenn du auf Aktualisieren klickst. Geprüft wird auch, wenn der Computer aufwacht oder wieder online ist."
+  },
+  "pollOff": {
+    "message": "Aus"
+  },
+  "pollEvery": {
+    "message": "Alle {0} Min."
+  },
+  "optIpv6": {
+    "message": "IPv6 separat prüfen"
+  },
+  "optIpv6Help": {
+    "message": "Erkennt VPNs, die IPv4 tunneln, aber IPv6 durchlassen. Kostet eine zusätzliche Abfrage, wenn du IPv6 hast."
+  },
+  "optSecondOpinion": {
+    "message": "Zweite VPN-Datenbank fragen"
+  },
+  "optSecondOpinionHelp": {
+    "message": "Wenn ipapi.is kein VPN findet, zusätzlich proxycheck.io fragen, damit ein fehlender Eintrag in einer Datenbank keinen Fehlalarm auslöst."
+  },
+  "optCountry": {
+    "message": "Land"
+  },
+  "optCountryHelp": {
+    "message": "Warnen, wenn das VPN woanders austritt."
+  },
+  "anyCountry": {
+    "message": "Beliebiges Land"
+  },
+  "optProvider": {
+    "message": "Anbieter"
+  },
+  "optProviderHelp": {
+    "message": "Warnen, wenn der Name des VPN-Dienstes oder Netzwerks diesen Text nicht enthält."
+  },
+  "optProviderPlaceholder": {
+    "message": "z. B. Mullvad"
+  },
+  "optTheme": {
+    "message": "Farbschema"
+  },
+  "themeSystem": {
+    "message": "Wie System"
+  },
+  "themeDark": {
+    "message": "Dunkel"
+  },
+  "themeLight": {
+    "message": "Hell"
+  },
+  "guardHelp": {
+    "message": "Seiten dieser Websites werden zurückgehalten, solange BrowserIP dein VPN nicht bestätigen kann (aus, Leck, unerwarteter Ausgang oder länger nicht geprüft). Das geschieht nach bestem Bemühen: Es reagiert so schnell, wie die Prüfungen laufen, und wirkt nur auf neu geladene Seiten."
+  },
+  "guardEmpty": {
+    "message": "Keine geschützten Websites."
+  },
+  "guardPlaceholder": {
+    "message": "beispiel.de"
+  },
+  "guardAdd": {
+    "message": "Hinzufügen"
+  },
+  "guardAllow": {
+    "message": "Seite erlauben"
+  },
+  "guardRemove": {
+    "message": "Entfernen"
+  },
+  "guardInvalid": {
+    "message": "Gib eine Domain wie beispiel.de ein."
+  },
+  "guardTooMany": {
+    "message": "Du kannst höchstens {0} Websites schützen."
+  },
+  "guardAdded": {
+    "message": "{0} hinzugefügt."
+  },
+  "guardAddedBlockOnly": {
+    "message": "{0} hinzugefügt. Ohne Zugriff auf die Website wird sie mit der Fehlerseite des Browsers statt mit einer Erklärung blockiert."
+  },
+  "guardModeRedirect": {
+    "message": "Zeigt eine Erklärungsseite und öffnet die Seite, sobald das VPN wieder aktiv ist"
+  },
+  "guardModeBlock": {
+    "message": "Mit der Fehlerseite des Browsers blockiert (Zugriff erlauben für eine Erklärungsseite)"
+  },
+  "optProxy": {
+    "message": "Proxy-Einstellungen des Browsers im Popup anzeigen"
+  },
+  "optProxyHelp": {
+    "message": "Benötigt die Berechtigung, Proxy-Einstellungen zu lesen. Erklärt, warum sich die IP des Browsers vom Rest deines Systems unterscheiden kann."
+  },
+  "keysHelp": {
+    "message": "Optional. Schlüssel erhöhen die kostenlosen täglichen Abfragelimits und werden nur auf diesem Gerät gespeichert."
+  },
+  "shortcutsHelp": {
+    "message": "Tastenkürzel änderst du in den Erweiterungs-Tastenkürzeln deines Browsers (in Chrome: chrome://extensions/shortcuts)."
+  },
+  "shortcutUnset": {
+    "message": "Nicht festgelegt"
+  },
+  "saved": {
+    "message": "Gespeichert."
+  },
+  "saveFailed": {
+    "message": "Speichern fehlgeschlagen: {0}"
+  },
+  "blockedTitle": {
+    "message": "Seite zurückgehalten"
+  },
+  "blockedExplain": {
+    "message": "Diese Website steht auf deiner Schutzliste, und BrowserIP kann nicht bestätigen, dass dein VPN aktiv ist. Die Seite öffnet sich von selbst, sobald das möglich ist."
+  },
+  "blockedRecheck": {
+    "message": "Erneut prüfen"
+  },
+  "blockedStale": {
+    "message": "Dein VPN-Status wurde länger nicht geprüft."
+  },
+  "blockedContinuing": {
+    "message": "VPN bestätigt. Seite wird geöffnet..."
+  }
+}

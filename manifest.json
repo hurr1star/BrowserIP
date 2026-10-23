@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "BrowserIP",
-  "version": "1.1.0",
-  "description": "Shows your browser's public IP, location and provider, and warns when your VPN is off or leaking.",
+  "name": "__MSG_extName__",
+  "version": "1.2.0",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "minimum_chrome_version": "121",
   "background": {
     "service_worker": "background.js",
@@ -17,11 +18,11 @@
       "128": "icons/icon-gray-128.png"
     },
     "default_popup": "popup.html",
-    "default_title": "BrowserIP"
+    "default_title": "__MSG_extName__"
   },
   "options_ui": {
     "page": "options.html",
-    "open_in_tab": false
+    "open_in_tab": true
   },
   "icons": {
     "16": "icons/icon-gray-16.png",
@@ -29,18 +30,37 @@
     "48": "icons/icon-gray-48.png",
     "128": "icons/icon-gray-128.png"
   },
-  "permissions": ["alarms", "notifications", "storage"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Alt+Shift+I" }
+    },
+    "refresh": {
+      "suggested_key": { "default": "Alt+Shift+U" },
+      "description": "__MSG_commandRefresh__"
+    }
+  },
+  "permissions": ["alarms", "contextMenus", "declarativeNetRequest", "idle", "notifications", "storage"],
+  "optional_permissions": ["proxy"],
   "host_permissions": [
     "https://api.ipapi.is/*",
     "https://ipwho.is/*",
     "https://ipinfo.io/*",
     "https://api4.ipify.org/*",
-    "https://api6.ipify.org/*"
+    "https://api6.ipify.org/*",
+    "https://proxycheck.io/*",
+    "https://bash.ws/*"
+  ],
+  "optional_host_permissions": ["*://*/*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["blocked.html"],
+      "matches": ["<all_urls>"]
+    }
   ],
   "browser_specific_settings": {
     "gecko": {
       "id": "browserip@hurr1star.github.io",
-      "strict_min_version": "121.0"
+      "strict_min_version": "128.0"
     }
   }
 }

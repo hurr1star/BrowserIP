@@ -3,60 +3,99 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BrowserIP settings</title>
+  <title>BrowserIP</title>
   <link rel="stylesheet" href="theme.css">
-  <link rel="stylesheet" href="options.css">
+  <link rel="stylesheet" href="pages.css">
 </head>
 <body>
   <main class="panel">
     <p class="eyebrow">BROWSERIP</p>
-    <h1>Settings</h1>
+    <h1 data-i18n="settingsTitle"></h1>
+    <p><a href="history.html" data-i18n="historyLink"></a></p>
+
     <form id="settings">
+      <h2 data-i18n="sectionAlerts"></h2>
       <label class="option">
         <input type="checkbox" name="expectVpn">
-        <span>
-          I expect to be on a VPN
-          <small>Show the red icon and warning when no VPN is detected. When off, a direct connection shows a blue icon.</small>
-        </span>
-      </label>
-      <label class="option">
-        <span>
-          Background checks
-          <small>Background checks only ask ipify whether your IP changed. A full lookup (ipapi.is allows about 1,000 a day without a key) runs when it changes, every 6 hours, or when you press Refresh.</small>
-        </span>
-        <select name="pollMinutes">
-          <option value="0">Off</option>
-          <option value="2">Every 2 minutes</option>
-          <option value="5">Every 5 minutes</option>
-          <option value="10">Every 10 minutes</option>
-          <option value="15">Every 15 minutes</option>
-          <option value="30">Every 30 minutes</option>
-          <option value="60">Every hour</option>
-        </select>
+        <span><span data-i18n="optExpectVpn"></span><small data-i18n="optExpectVpnHelp"></small></span>
       </label>
       <label class="option">
         <input type="checkbox" name="notifyOnChange">
-        <span>
-          Notify me when my VPN status or IP changes
-          <small>Only for background checks; the popup already shows the change.</small>
-        </span>
+        <span><span data-i18n="optNotify"></span><small data-i18n="optNotifyHelp"></small></span>
       </label>
       <label class="option">
         <input type="checkbox" name="showCountryBadge">
-        <span>
-          Show the country code on the toolbar icon
-          <small>Alerts (OFF, LEAK, ?) are always shown.</small>
-        </span>
+        <span><span data-i18n="optBadge"></span><small data-i18n="optBadgeHelp"></small></span>
+      </label>
+
+      <h2 data-i18n="sectionChecks"></h2>
+      <label class="option">
+        <span><span data-i18n="optPoll"></span><small data-i18n="optPollHelp"></small></span>
+        <select name="pollMinutes" id="pollMinutes"></select>
       </label>
       <label class="option">
         <input type="checkbox" name="checkIpv6">
-        <span>
-          Check IPv6 separately
-          <small>Catches VPNs that tunnel IPv4 but leak IPv6. Costs one extra lookup when you have IPv6.</small>
-        </span>
+        <span><span data-i18n="optIpv6"></span><small data-i18n="optIpv6Help"></small></span>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="secondOpinion">
+        <span><span data-i18n="optSecondOpinion"></span><small data-i18n="optSecondOpinionHelp"></small></span>
+      </label>
+
+      <h2 data-i18n="sectionExpected"></h2>
+      <label class="option">
+        <span><span data-i18n="optCountry"></span><small data-i18n="optCountryHelp"></small></span>
+        <select name="expectedCountry" id="expectedCountry"></select>
+      </label>
+      <label class="option">
+        <span><span data-i18n="optProvider"></span><small data-i18n="optProviderHelp"></small></span>
+        <input type="text" name="expectedProvider" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder:optProviderPlaceholder">
+      </label>
+
+      <h2 data-i18n="sectionAppearance"></h2>
+      <label class="option">
+        <span data-i18n="optTheme"></span>
+        <select name="theme">
+          <option value="system" data-i18n="themeSystem"></option>
+          <option value="dark" data-i18n="themeDark"></option>
+          <option value="light" data-i18n="themeLight"></option>
+        </select>
       </label>
     </form>
-    <p id="saved" class="saved" aria-live="polite"></p>
+
+    <h2 data-i18n="sectionGuard"></h2>
+    <p class="note" data-i18n="guardHelp"></p>
+    <ul id="siteList" class="site-list"></ul>
+    <form id="addSite" class="inline-form">
+      <input id="siteInput" type="text" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder:guardPlaceholder,aria-label:guardPlaceholder">
+      <button type="submit" data-i18n="guardAdd"></button>
+    </form>
+    <p id="siteStatus" class="status-line" aria-live="polite"></p>
+
+    <h2 data-i18n="sectionProxy"></h2>
+    <label class="option">
+      <input type="checkbox" id="showProxy">
+      <span><span data-i18n="optProxy"></span><small data-i18n="optProxyHelp"></small></span>
+    </label>
+
+    <h2 data-i18n="sectionKeys"></h2>
+    <p class="note" data-i18n="keysHelp"></p>
+    <form id="apiKeys">
+      <label class="option">
+        <span>ipapi.is</span>
+        <input type="password" name="ipapi" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="option">
+        <span>proxycheck.io</span>
+        <input type="password" name="proxycheck" autocomplete="off" spellcheck="false">
+      </label>
+    </form>
+
+    <h2 data-i18n="sectionShortcuts"></h2>
+    <ul id="shortcuts" class="site-list"></ul>
+    <p class="note" data-i18n="shortcutsHelp"></p>
+
+    <p id="saved" class="status-line" aria-live="polite"></p>
   </main>
   <script type="module" src="options.js"></script>
 </body>

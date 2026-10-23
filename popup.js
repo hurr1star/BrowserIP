@@ -1,46 +1,37 @@
-import { formatAge, formatAsn, formatLocation, formatTime } from "./lib/format.js";
+import { addressStatus, formatAge, formatAsn, formatCountry, formatLocation, formatTime } from "./lib/format.js";
+import { localizePage, t } from "./lib/i18n.js";
 import { deriveIndicator } from "./lib/indicator.js";
-import { DEFAULT_SETTINGS, loadSettings } from "./lib/settings.js";
+import { isIpAddress } from "./lib/ip.js";
+import { renderLookup } from "./lib/lookup-view.js";
+import { describeProxySettings } from "./lib/proxyinfo.js";
+import { buildReport } from "./lib/report.js";
+import { DEFAULT_SETTINGS, applyTheme, loadSettings } from "./lib/settings.js";
+import { runDnsLeakTest } from "./lib/dnsleak.js";
 import { analyzeCandidates, gatherCandidates } from "./lib/webrtc.js";
 
-const ipEl = document.getElementById("ip");
-const statusEl = document.getElementById("status");
-const refreshButton = document.getElementById("refresh");
-const webrtcButton = document.getElementById("webrtcTest");
-const webrtcResultEl = document.getElementById("webrtcResult");
-const vpnStatusEl = document.getElementById("vpnStatus");
-const vpnDetailEl = document.getElementById("vpnDetail");
-const vpnWarningEl = document.getElementById("vpnWarning");
+const $ = (id) => document.getElementById(id);
+const ipEl = $("ip");
+const statusEl = $("status");
+const refreshButton = $("refresh");
 const fields = {
-  location: document.getElementById("location"),
-  country: document.getElementById("country"),
-  provider: document.getElementById("provider"),
-  asn: document.getElementById("asn"),
-  timezone: document.getElementById("timezone"),
-  source: document.getElementById("source")
+  location: $("location"),
+  country: $("country"),
+  provider: $("provider"),
+  asn: $("asn"),
+  timezone: $("timezone"),
+  source: $("source")
 };
 const familyRows = {
-  IPv4: { row: document.getElementById("ipv4Row"), value: document.getElementById("ipv4") },
-  IPv6: { row: document.getElementById("ipv6Row"), value: document.getElementById("ipv6") }
+  IPv4: { row: $("ipv4Row"), value: $("ipv4") },
+  IPv6: { row: $("ipv6Row"), value: $("ipv6") }
 };
 
 let currentState = null;
 let currentSettings = { ...DEFAULT_SETTINGS };
 let refreshing = false;
 let flashTimer = null;
-
-function addressTag(address) {
-  if (address.error) {
-    return { text: "lookup failed", className: "tag-bad" };
-  }
-  if (address.tunnelled === true) {
-    return { text: "✓ tunnelled", className: "tag-ok" };
-  }
-  if (address.tunnelled === false) {
-    return { text: "✕ direct", className: currentSettings.expectVpn ? "tag-bad" : "" };
-  }
-  return { text: "? unknown", className: "" };
-}
+// Latest results, kept for the copied report.
+const extras = { proxy: null, webrtc: null, dns: null };
 
 function renderFamilies(addresses) {
   // Per-family rows only add information when both families are present.
@@ -50,10 +41,10 @@ function renderFamilies(addresses) {
     row.hidden = !showRows || !address;
     value.replaceChildren();
     if (!row.hidden) {
-      const tag = addressTag(address);
       const tagEl = document.createElement("span");
-      tagEl.className = `sub ${tag.className}`;
-      tagEl.textContent = tag.text;
+      const bad = address.error || (address.tunnelled === false && currentSettings.expectVpn);
+      tagEl.className = `sub ${address.tunnelled === true ? "tag-ok" : bad ? "tag-bad" : ""}`;
+      tagEl.textContent = addressStatus(address);
       value.append(address.ip, tagEl);
     }
   }
@@ -61,16 +52,16 @@ function renderFamilies(addresses) {
 
 function statusText(state, indicator) {
   if (refreshing) {
-    return "Fetching network details...";
+    return t("statusFetching");
   }
   if (!state?.checkedAt) {
-    return state?.error ? `Could not load IP: ${state.error}` : "";
+    return state?.error ? t("statusLoadFailed", state.error) : "";
   }
-  const when = `${formatTime(state.checkedAt)} (${formatAge(Date.now() - state.checkedAt)})`;
+  const when = t("timeWithAge", formatTime(state.checkedAt), formatAge(Date.now() - state.checkedAt));
   if (!state.ok) {
-    return `Refresh failed: ${state.error}. Showing data from ${when}.`;
+    return t("statusRefreshFailed", state.error, when);
   }
-  return indicator.stale ? `Out of date: last checked ${when}.` : `Checked ${when}.`;
+  return indicator.stale ? t("statusOutOfDate", when) : t("statusChecked", when);
 }
 
 function render() {
@@ -79,21 +70,21 @@ function render() {
   const addresses = state?.addresses ?? [];
   const primary = addresses[0];
   const info = primary?.info;
-  const placeholder = state ? "Unavailable" : "Loading...";
+  const placeholder = state ? t("unavailable") : t("loading");
 
-  vpnWarningEl.hidden = !indicator.warning;
-  vpnWarningEl.textContent = indicator.warning ?? "";
+  $("vpnWarning").hidden = !indicator.warning;
+  $("vpnWarning").textContent = indicator.warning ?? "";
 
   ipEl.textContent = primary?.ip ?? placeholder;
   ipEl.disabled = !primary;
 
-  vpnStatusEl.textContent = indicator.vpnLabel;
-  vpnDetailEl.hidden = !indicator.detail;
-  vpnDetailEl.textContent = indicator.detail ?? "";
+  $("vpnStatus").textContent = indicator.vpnLabel;
+  $("vpnDetail").hidden = !indicator.detail;
+  $("vpnDetail").textContent = indicator.detail ?? "";
   renderFamilies(addresses);
 
   fields.location.textContent = formatLocation(info) ?? placeholder;
-  fields.country.textContent = info?.country ?? placeholder;
+  fields.country.textContent = formatCountry(info) ?? placeholder;
   fields.provider.textContent = info?.isp ?? placeholder;
   fields.asn.textContent = formatAsn(info) ?? placeholder;
   fields.timezone.textContent = info?.timezone ?? placeholder;
@@ -134,53 +125,114 @@ async function refresh(force) {
   }
 }
 
-async function copyIp() {
-  const ip = currentState?.addresses?.[0]?.ip;
-  if (!ip) {
-    return;
-  }
+async function copyText(text, message) {
   try {
-    await navigator.clipboard.writeText(ip);
-    flashStatus(`Copied ${ip} to the clipboard.`);
+    await navigator.clipboard.writeText(text);
+    flashStatus(message);
   } catch (_error) {
-    flashStatus("Could not copy to the clipboard.");
+    flashStatus(t("copyFailed"));
+  }
+}
+
+async function loadProxy() {
+  try {
+    if (!(await chrome.permissions.contains({ permissions: ["proxy"] }))) {
+      return;
+    }
+    extras.proxy = describeProxySettings(await chrome.proxy.settings.get({}));
+    $("proxy").textContent = extras.proxy;
+    $("proxyRow").hidden = false;
+  } catch (_error) {
+    // Proxy details are optional extras.
   }
 }
 
 async function runWebRtcTest() {
-  webrtcButton.disabled = true;
-  webrtcResultEl.hidden = false;
-  webrtcResultEl.classList.remove("is-leak");
-  webrtcResultEl.textContent = "Asking STUN servers which address WebRTC exposes...";
+  const button = $("webrtcTest");
+  const resultEl = $("webrtcResult");
+  button.disabled = true;
+  resultEl.hidden = false;
+  resultEl.classList.remove("is-leak");
+  resultEl.textContent = t("webrtcRunning");
 
   try {
     const knownIps = (currentState?.addresses ?? []).map((address) => address.ip);
     const result = analyzeCandidates(await gatherCandidates(), knownIps);
     const lines = [];
     if (result.leaked.length) {
-      webrtcResultEl.classList.add("is-leak");
-      lines.push(`LEAK: WebRTC exposes ${result.leaked.join(", ")}, which is not your browser IP.`);
+      resultEl.classList.add("is-leak");
+      lines.push(t("webrtcLeak", result.leaked.join(", ")));
     } else if (result.publicIps.length) {
-      lines.push(`OK: WebRTC only exposes your browser IP (${result.publicIps.join(", ")}).`);
+      lines.push(t("webrtcOk", result.publicIps.join(", ")));
     } else {
-      lines.push("OK: WebRTC exposed no public address.");
+      lines.push(t("webrtcNone"));
     }
     if (result.localIps.length) {
-      lines.push(`Local address visible to sites: ${result.localIps.join(", ")}.`);
+      lines.push(t("webrtcLocal", result.localIps.join(", ")));
     }
-    webrtcResultEl.textContent = lines.join(" ");
+    resultEl.textContent = lines.join(" ");
   } catch (error) {
-    webrtcResultEl.textContent = `WebRTC test failed: ${error.message}`;
+    resultEl.textContent = t("webrtcFailed", error.message);
   } finally {
-    webrtcButton.disabled = false;
+    extras.webrtc = resultEl.textContent;
+    button.disabled = false;
+  }
+}
+
+async function runDnsTest() {
+  const button = $("dnsTest");
+  const resultEl = $("dnsResult");
+  button.disabled = true;
+  resultEl.hidden = false;
+  resultEl.classList.remove("is-leak");
+  resultEl.textContent = t("dnsRunning");
+
+  try {
+    const result = await runDnsLeakTest();
+    const servers = result.servers
+      .map((server) => [server.ip, [server.country, server.asn].filter(Boolean).join(", ")].filter(Boolean).join(" — "))
+      .join("; ");
+    resultEl.classList.toggle("is-leak", result.leaking === true);
+    const verdict =
+      result.leaking === true ? t("dnsLeak") : result.leaking === false ? t("dnsOk") : t("dnsUnclear");
+    resultEl.textContent = servers ? `${verdict} ${t("dnsServers", servers)}` : `${verdict} ${t("dnsNoServers")}`;
+  } catch (error) {
+    resultEl.textContent = t("dnsFailed", error.message);
+  } finally {
+    extras.dns = resultEl.textContent;
+    button.disabled = false;
+  }
+}
+
+async function lookup(event) {
+  event.preventDefault();
+  const ip = $("lookupInput").value.trim();
+  const resultEl = $("lookupResult");
+  if (!isIpAddress(ip)) {
+    resultEl.textContent = t("lookupInvalid");
+    return;
+  }
+  resultEl.textContent = t("lookupRunning");
+  try {
+    const response = await chrome.runtime.sendMessage({ type: "lookup", ip });
+    if (response?.address) {
+      renderLookup(resultEl, response.address);
+    } else {
+      resultEl.textContent = t("lookupFailed", response?.error ?? "?");
+    }
+  } catch (error) {
+    resultEl.textContent = t("lookupFailed", error.message);
   }
 }
 
 async function init() {
+  localizePage();
   const [{ state }, settings] = await Promise.all([chrome.storage.local.get("state"), loadSettings()]);
   currentState = state ?? null;
   currentSettings = settings;
+  applyTheme(settings);
   render();
+  loadProxy();
   // Opening the popup re-checks; unchanged addresses reuse the cached lookup.
   await refresh(false);
 }
@@ -192,16 +244,31 @@ chrome.storage.onChanged.addListener((changes, area) => {
   } else if (area === "sync" && changes.settings) {
     loadSettings().then((settings) => {
       currentSettings = settings;
+      applyTheme(settings);
       render();
     });
   }
 });
 
 refreshButton.addEventListener("click", () => refresh(true));
-ipEl.addEventListener("click", copyIp);
-webrtcButton.addEventListener("click", runWebRtcTest);
-document.getElementById("openOptions").addEventListener("click", () => chrome.runtime.openOptionsPage());
-// Keep "2m ago" and staleness current while the popup stays open.
+ipEl.addEventListener("click", () => {
+  const ip = currentState?.addresses?.[0]?.ip;
+  if (ip) {
+    copyText(ip, t("copiedIp", ip));
+  }
+});
+$("copyReport").addEventListener("click", () =>
+  copyText(
+    buildReport({ state: currentState, settings: currentSettings, now: Date.now(), ...extras }),
+    t("copiedReport")
+  )
+);
+$("webrtcTest").addEventListener("click", runWebRtcTest);
+$("dnsTest").addEventListener("click", runDnsTest);
+$("lookupForm").addEventListener("submit", lookup);
+$("openOptions").addEventListener("click", () => chrome.runtime.openOptionsPage());
+$("openHistory").addEventListener("click", () => chrome.tabs.create({ url: chrome.runtime.getURL("history.html") }));
+// Keep "2 min. ago" and staleness current while the popup stays open.
 setInterval(render, 30000);
 
 init();

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrowserIP</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <main class="panel">
+    <p class="eyebrow">BROWSERIP</p>
+    <h1 data-i18n="lookupTitle"></h1>
+    <form id="lookupForm" class="inline-form">
+      <input id="lookupInput" type="search" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder:lookupPlaceholder,aria-label:lookupPlaceholder">
+      <button type="submit" data-i18n="lookupButton"></button>
+    </form>
+    <p id="lookupStatus" class="status-line" aria-live="polite"></p>
+    <div id="lookupResult"></div>
+  </main>
+  <script type="module" src="lookup.js"></script>
+</body>
+</html>
