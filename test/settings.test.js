@@ -46,3 +46,8 @@ test("API keys are trimmed strings", () => {
   assert.deepEqual(sanitizeApiKeys({ ipapi: " k ", proxycheck: 5 }), { ipapi: "k", proxycheck: "" });
   assert.deepEqual(sanitizeApiKeys(undefined), { ipapi: "", proxycheck: "" });
 });
+
+test("vpnProvider accepts only known services", () => {
+  assert.equal(sanitizeSettings({ vpnProvider: "mullvad" }).vpnProvider, "mullvad");
+  assert.equal(sanitizeSettings({ vpnProvider: "nordvpn" }).vpnProvider, "");
+});

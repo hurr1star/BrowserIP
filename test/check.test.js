@@ -164,3 +164,34 @@ test("lookupAddress classifies any address", async () => {
   assert.equal(address.ip, "185.65.135.10");
   assert.equal(address.tunnelled, true);
 });
+
+test("Mullvad users get Mullvad's own verdict, which saves the second opinion", async () => {
+  const fetchImpl = fakeFetch({
+    "https://api4.ipify.org/": { ip: "185.65.135.10" },
+    "https://api6.ipify.org/": { ip: "2001:db8::7" },
+    "https://api.ipapi.is/?q=185": residentialFor("185.65.135.10"),
+    "https://api.ipapi.is/?q=2001": residentialFor("2001:db8::7"),
+    "https://ipv4.am.i.mullvad.net/json": fixture("mullvad-exit"),
+    "https://ipv6.am.i.mullvad.net/json": { ip: "2001:db8::7", mullvad_exit_ip: false },
+    "https://proxycheck.io/": { status: "ok", "2001:db8::7": { proxy: "no" } }
+  });
+  const state = await runCheck({
+    settings: { ...settings, vpnProvider: "mullvad", secondOpinion: true },
+    now: NOW,
+    fetchImpl
+  });
+  assert.equal(state.overall, "leak");
+  assert.deepEqual(state.addresses[0].reasons, ["Mullvad (se-got-wg-001, WireGuard)"]);
+  assert.equal(state.addresses[1].tunnelled, false);
+  const proxycheckCalls = fetchImpl.calls.filter((url) => url.startsWith("https://proxycheck.io/"));
+  assert.deepEqual(proxycheckCalls, ["https://proxycheck.io/v2/2001:db8::7?vpn=1&asn=1"]);
+});
+
+test("the Mullvad check is skipped unless Mullvad is selected", async () => {
+  const fetchImpl = fakeFetch({
+    "https://api4.ipify.org/": { ip: "185.65.135.10" },
+    "https://api.ipapi.is/": fixture("ipapi-vpn")
+  });
+  await runCheck({ settings, now: NOW, fetchImpl });
+  assert.ok(!fetchImpl.calls.some((url) => url.includes("mullvad.net")));
+});

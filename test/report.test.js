@@ -26,7 +26,6 @@ test("the report lists the status, addresses, details and test results", () => {
     state,
     settings: DEFAULT_SETTINGS,
     now: NOW,
-    proxy: "System settings",
     webrtc: "OK: WebRTC exposed no public address.",
     dns: null
   });
@@ -39,7 +38,6 @@ test("the report lists the status, addresses, details and test results", () => {
     "IPv6: 2001:db8::7 (✕ direct)",
     "Location: Stockholm",
     "ASN: AS9009 · M247",
-    "Browser proxy: System settings",
     "WebRTC test: OK: WebRTC exposed no public address."
   ]) {
     assert.ok(lines.includes(expected), `missing "${expected}" in:\n${report}`);
@@ -49,4 +47,24 @@ test("the report lists the status, addresses, details and test results", () => {
 
 test("an empty state still produces a report", () => {
   assert.match(buildReport({ state: null, settings: DEFAULT_SETTINGS, now: NOW }), /VPN: Checking\.\.\./);
+});
+
+test("the report includes reputation and the Mullvad app state", () => {
+  const state = {
+    ok: true,
+    checkedAt: NOW,
+    overall: "tunnelled",
+    addresses: [
+      {
+        ip: "185.65.135.10",
+        family: "IPv4",
+        tunnelled: true,
+        reasons: ["Mullvad (se-got-wg-001, WireGuard)"],
+        info: { mullvad: { exit: true, blacklisted: true, blacklists: ["Spamhaus"] }, flags: {} }
+      }
+    ]
+  };
+  const report = buildReport({ state, settings: DEFAULT_SETTINGS, now: NOW, mullvadApp: "Connected · se-got-wg-001" });
+  assert.match(report, /^Reputation: On blocklists \(Spamhaus\); expect CAPTCHAs$/m);
+  assert.match(report, /^Mullvad app: Connected · se-got-wg-001$/m);
 });

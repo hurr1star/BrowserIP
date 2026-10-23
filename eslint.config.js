@@ -20,7 +20,7 @@ export default [
     }
   },
   {
-    files: ["scripts/**", "test/**", "eslint.config.js"],
+    files: ["scripts/**", "test/**", "e2e/**", "eslint.config.js"],
     languageOptions: {
       globals: globals.node
     }

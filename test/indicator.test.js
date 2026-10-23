@@ -148,3 +148,21 @@ test("describeChange reports a new expectation mismatch", () => {
   assert.equal(change.title, "Unexpected VPN exit");
   assert.match(change.message, /^Exit country is United States, expected Sweden · 192\.0\.2\.1$/);
 });
+
+test("Mullvad users are warned when the VPN isn't Mullvad", () => {
+  const mullvadSettings = { ...settings, vpnProvider: "mullvad" };
+  const other = state("tunnelled");
+  other.addresses[0] = { ...other.addresses[0], info: { ...other.addresses[0].info, mullvad: { exit: false } } };
+  const indicator = deriveIndicator(other, mullvadSettings, NOW);
+  assert.equal(indicator.warning, "Not connected through Mullvad");
+  assert.equal(indicator.badgeText, "!ISP");
+  assert.equal(indicator.safe, false);
+
+  const onMullvad = state("tunnelled");
+  onMullvad.addresses[0] = {
+    ...onMullvad.addresses[0],
+    info: { ...onMullvad.addresses[0].info, mullvad: { exit: true, hostname: "se-got-wg-001" } }
+  };
+  assert.equal(deriveIndicator(onMullvad, mullvadSettings, NOW).safe, true);
+  assert.equal(deriveIndicator(onMullvad, { ...mullvadSettings, expectedProvider: "mullvad" }, NOW).safe, true);
+});

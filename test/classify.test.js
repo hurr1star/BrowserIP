@@ -70,3 +70,11 @@ test("a second opinion fills in when the first database has no flags", () => {
   const info = { ...noFlags, secondOpinion: { provider: "proxycheck.io", tunnelled: false, label: null } };
   assert.equal(classifyAddress(info).tunnelled, false);
 });
+
+test("Mullvad's own check marks its exits as tunnelled", () => {
+  const info = { ...residential, mullvad: { exit: true, hostname: "se-got-wg-001", serverType: "WireGuard" } };
+  assert.deepEqual(classifyAddress(info), { tunnelled: true, reasons: ["Mullvad (se-got-wg-001, WireGuard)"] });
+  // A non-Mullvad answer leaves the decision to the IP databases.
+  assert.equal(classifyAddress({ ...vpn, mullvad: { exit: false } }).tunnelled, true);
+  assert.equal(classifyAddress({ ...residential, mullvad: { exit: false } }).tunnelled, false);
+});

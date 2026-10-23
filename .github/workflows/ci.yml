@@ -31,6 +31,27 @@ jobs:
           name: browserip-extension
           path: dist/*.zip
 
+  helper:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: helper
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: helper/go.mod
+          cache-dependency-path: helper/go.mod
+      - run: test -z "$(gofmt -l .)"
+      - run: go vet ./...
+      - run: GOOS=windows go vet ./...
+      - run: go test ./...
+      - run: ./build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: browserip-helper
+          path: dist/helper/*
+
   e2e:
     runs-on: ubuntu-latest
     steps:
@@ -39,12 +60,17 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      # The Mullvad tests build and drive the real helper.
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: helper/go.mod
+          cache-dependency-path: helper/go.mod
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
 
   release:
-    needs: [check, e2e]
+    needs: [check, helper, e2e]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
@@ -58,7 +84,11 @@ jobs:
         with:
           name: browserip-extension
           path: dist
-      - run: gh release create "$GITHUB_REF_NAME" dist/*.zip --repo "$GITHUB_REPOSITORY" --generate-notes
+      - uses: actions/download-artifact@v4
+        with:
+          name: browserip-helper
+          path: dist/helper
+      - run: gh release create "$GITHUB_REF_NAME" dist/*.zip dist/helper/* --repo "$GITHUB_REPOSITORY" --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Publish to the Chrome Web Store
