@@ -1,5 +1,6 @@
 import { localizePage, t, uiLanguage } from "./lib/i18n.js";
 import { siteOrigins } from "./lib/guard.js";
+import { HELPER_RELEASES_URL, callHelper } from "./lib/mullvad.js";
 import { countryName } from "./lib/providers.js";
 import {
   MAX_GUARDED_SITES,
@@ -55,6 +56,8 @@ function fillForm() {
   form.elements.expectedCountry.value = settings.expectedCountry;
   form.elements.expectedProvider.value = settings.expectedProvider;
   form.elements.theme.value = settings.theme;
+  form.elements.vpnProvider.value = settings.vpnProvider;
+  $("helperSetup").hidden = settings.vpnProvider !== "mullvad";
 }
 
 function readForm() {
@@ -68,7 +71,8 @@ function readForm() {
     pollMinutes: Number(form.elements.pollMinutes.value),
     expectedCountry: form.elements.expectedCountry.value,
     expectedProvider: form.elements.expectedProvider.value,
-    theme: form.elements.theme.value
+    theme: form.elements.theme.value,
+    vpnProvider: form.elements.vpnProvider.value
   };
 }
 
@@ -77,6 +81,7 @@ async function save(next) {
     await saveSettings(next);
     settings = await loadSettings();
     applyTheme(settings);
+    $("helperSetup").hidden = settings.vpnProvider !== "mullvad";
     savedEl.textContent = t("saved");
   } catch (error) {
     savedEl.textContent = t("saveFailed", error.message);
@@ -166,19 +171,35 @@ async function addSite(event) {
   await renderSites();
 }
 
-async function setupProxyToggle() {
-  const checkbox = $("showProxy");
-  checkbox.checked = await chrome.permissions.contains({ permissions: ["proxy"] });
-  checkbox.addEventListener("change", async () => {
+function setupHelper() {
+  $("helperReleases").href = HELPER_RELEASES_URL;
+  // Firefox identifies the extension by its fixed add-on ID, so only
+  // Chromium browsers need the (per-install) extension ID.
+  const firefox = chrome.runtime.getURL("").startsWith("moz-extension:");
+  const id = firefox ? "" : chrome.runtime.id;
+  $("helperCommandUnix").textContent = id ? `./install.sh --extension-id ${id}` : "./install.sh";
+  $("helperCommandWindows").textContent = `powershell -ExecutionPolicy Bypass -File install.ps1${id ? ` -ExtensionId ${id}` : ""}`;
+
+  $("helperTest").addEventListener("click", async () => {
+    const statusEl = $("helperStatus");
+    // Request first, while the click still counts as a user gesture; this
+    // resolves immediately when the permission is already granted.
+    let granted;
     try {
-      if (checkbox.checked) {
-        checkbox.checked = await chrome.permissions.request({ permissions: ["proxy"] });
-      } else {
-        await chrome.permissions.remove({ permissions: ["proxy"] });
-      }
+      granted = await chrome.permissions.request({ permissions: ["nativeMessaging"] });
+    } catch (_error) {
+      granted = false;
+    }
+    if (!granted) {
+      statusEl.textContent = t("helperPermissionDenied");
+      return;
+    }
+    statusEl.textContent = t("helperTesting");
+    try {
+      const hello = await callHelper("hello");
+      statusEl.textContent = t("helperOk", hello.helper, hello.mullvad ?? hello.mullvadError ?? "?");
     } catch (error) {
-      checkbox.checked = false;
-      savedEl.textContent = t("saveFailed", error.message);
+      statusEl.textContent = t("helperFailed", error.message);
     }
   });
 }
@@ -217,7 +238,8 @@ async function init() {
   // Typing in the provider box shouldn't submit (and reload) the page.
   form.addEventListener("submit", (event) => event.preventDefault());
   $("addSite").addEventListener("submit", addSite);
-  await Promise.all([renderSites(), setupProxyToggle(), setupKeys(), showShortcuts()]);
+  setupHelper();
+  await Promise.all([renderSites(), setupKeys(), showShortcuts()]);
 }
 
 init();

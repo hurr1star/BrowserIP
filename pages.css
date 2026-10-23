@@ -47,6 +47,41 @@ label.option {
   width: 220px;
 }
 
+.helper {
+  display: block;
+}
+
+.helper small {
+  margin-bottom: 8px;
+}
+
+.steps {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.steps li {
+  margin: 0 0 8px;
+}
+
+.steps button {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.command {
+  display: block;
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  font-size: 11px;
+  word-break: break-all;
+  user-select: all;
+}
+
 .status-line {
   min-height: 18px;
   font-size: 12px;

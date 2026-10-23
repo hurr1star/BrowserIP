@@ -20,6 +20,18 @@
       </div>
     </header>
     <div id="vpnWarning" class="vpn-warning" role="alert" hidden></div>
+    <section id="mullvadPanel" class="mullvad-panel" hidden>
+      <div class="mullvad-head">
+        <span class="mullvad-title" data-i18n="mullvadTitle"></span>
+        <span id="mullvadState" class="mullvad-state" aria-live="polite"></span>
+      </div>
+      <div id="mullvadControls" class="mullvad-controls" hidden>
+        <button id="mullvadToggle" type="button"></button>
+        <button id="mullvadReconnect" type="button" class="secondary" data-i18n="mullvadReconnect"></button>
+        <select id="mullvadCountry" data-i18n-attr="aria-label:mullvadChooseCountry"></select>
+      </div>
+      <button id="mullvadSetup" type="button" class="link-button" data-i18n="mullvadSetup" hidden></button>
+    </section>
     <p class="ip-label"><span data-i18n="ipLabel"></span> <span class="hint" data-i18n="ipHint"></span></p>
     <button id="ip" class="ip" type="button" data-i18n-attr="title:copyIpTitle"></button>
     <dl class="details">
@@ -62,9 +74,9 @@
         <dt data-i18n="labelSource"></dt>
         <dd id="source"></dd>
       </div>
-      <div class="row" id="proxyRow" hidden>
-        <dt data-i18n="labelProxy"></dt>
-        <dd id="proxy"></dd>
+      <div class="row" id="reputationRow" hidden>
+        <dt data-i18n="labelReputation"></dt>
+        <dd id="reputation"></dd>
       </div>
     </dl>
     <p id="status" class="status" aria-live="polite"></p>

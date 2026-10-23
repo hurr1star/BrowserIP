@@ -14,6 +14,35 @@
     <p><a href="history.html" data-i18n="historyLink"></a></p>
 
     <form id="settings">
+      <h2 id="mullvad" data-i18n="sectionVpn"></h2>
+      <label class="option">
+        <span><span data-i18n="optVpnProvider"></span><small data-i18n="optVpnProviderHelp"></small></span>
+        <select name="vpnProvider">
+          <option value="" data-i18n="vpnProviderOther"></option>
+          <option value="mullvad">Mullvad</option>
+        </select>
+      </label>
+      <div id="helperSetup" class="option helper" hidden>
+        <strong data-i18n="helperHeading"></strong>
+        <small data-i18n="helperHelp"></small>
+        <ol class="steps">
+          <li>
+            <span data-i18n="helperStep1"></span>
+            <a id="helperReleases" target="_blank" rel="noopener" data-i18n="helperReleases"></a>
+          </li>
+          <li>
+            <span data-i18n="helperStep2"></span>
+            <code class="command" id="helperCommandUnix"></code>
+            <code class="command" id="helperCommandWindows"></code>
+          </li>
+          <li>
+            <span data-i18n="helperStep3"></span>
+            <button type="button" id="helperTest" data-i18n="helperTest"></button>
+          </li>
+        </ol>
+        <p id="helperStatus" class="status-line" aria-live="polite"></p>
+      </div>
+
       <h2 data-i18n="sectionAlerts"></h2>
       <label class="option">
         <input type="checkbox" name="expectVpn">
@@ -71,12 +100,6 @@
       <button type="submit" data-i18n="guardAdd"></button>
     </form>
     <p id="siteStatus" class="status-line" aria-live="polite"></p>
-
-    <h2 data-i18n="sectionProxy"></h2>
-    <label class="option">
-      <input type="checkbox" id="showProxy">
-      <span><span data-i18n="optProxy"></span><small data-i18n="optProxyHelp"></small></span>
-    </label>
 
     <h2 data-i18n="sectionKeys"></h2>
     <p class="note" data-i18n="keysHelp"></p>

@@ -59,9 +59,6 @@
   "labelSource": {
     "message": "Fuente"
   },
-  "labelProxy": {
-    "message": "Proxy del navegador"
-  },
   "refresh": {
     "message": "Actualizar"
   },
@@ -254,27 +251,6 @@
   "dnsFailed": {
     "message": "La prueba de fuga DNS falló: {0}"
   },
-  "proxyNone": {
-    "message": "Ninguno (directo)"
-  },
-  "proxySystem": {
-    "message": "Configuración del sistema"
-  },
-  "proxyAutoDetect": {
-    "message": "Detección automática"
-  },
-  "proxyPac": {
-    "message": "Script PAC ({0})"
-  },
-  "proxyInlinePac": {
-    "message": "integrado"
-  },
-  "proxyFixed": {
-    "message": "Fijo: {0}"
-  },
-  "proxyByExtension": {
-    "message": "(establecido por otra extensión)"
-  },
   "reportHeading": {
     "message": "Informe de BrowserIP — {0}"
   },
@@ -334,9 +310,6 @@
   },
   "sectionGuard": {
     "message": "Sitios protegidos"
-  },
-  "sectionProxy": {
-    "message": "Proxy del navegador"
   },
   "sectionKeys": {
     "message": "Claves de API"
@@ -452,12 +425,6 @@
   "guardModeBlock": {
     "message": "Bloqueado con la página de error del navegador (permite el acceso para ver una explicación)"
   },
-  "optProxy": {
-    "message": "Mostrar la configuración de proxy del navegador en la ventana emergente"
-  },
-  "optProxyHelp": {
-    "message": "Requiere permiso para leer la configuración de proxy. Explica por qué la IP del navegador puede ser distinta de la del resto del sistema."
-  },
   "keysHelp": {
     "message": "Opcional. Las claves aumentan los límites diarios gratuitos y se guardan solo en este dispositivo."
   },
@@ -487,5 +454,122 @@
   },
   "blockedContinuing": {
     "message": "VPN confirmada. Continuando..."
+  },
+  "labelReputation": {
+    "message": "Reputación"
+  },
+  "reputationClean": {
+    "message": "No figura en listas de bloqueo"
+  },
+  "reputationAbuser": {
+    "message": "Marcada por abusos; espera CAPTCHAs"
+  },
+  "reputationListed": {
+    "message": "En listas de bloqueo ({0}); espera CAPTCHAs"
+  },
+  "reputationListedPlain": {
+    "message": "En listas de bloqueo; espera CAPTCHAs"
+  },
+  "mismatchNotMullvad": {
+    "message": "No conectado a través de Mullvad"
+  },
+  "sectionVpn": {
+    "message": "Tu VPN"
+  },
+  "optVpnProvider": {
+    "message": "Servicio VPN"
+  },
+  "optVpnProviderHelp": {
+    "message": "Mullvad: detección exacta con la comprobación de conexión de Mullvad (am.i.mullvad.net), el nombre del servidor en la ventana emergente y conexión opcional con un clic."
+  },
+  "vpnProviderOther": {
+    "message": "Otro / ninguno"
+  },
+  "helperHeading": {
+    "message": "Conexión con un clic (app de Mullvad)"
+  },
+  "helperHelp": {
+    "message": "Instala una vez el pequeño asistente de BrowserIP. Permite a la extensión usar la herramienta de línea de comandos de Mullvad para conectar, desconectar, reconectar y cambiar de país, y nada más."
+  },
+  "helperStep1": {
+    "message": "Descarga el asistente para tu sistema y descomprímelo:"
+  },
+  "helperReleases": {
+    "message": "última versión"
+  },
+  "helperStep2": {
+    "message": "En la carpeta descomprimida, ejecuta (macOS/Linux y luego Windows):"
+  },
+  "helperStep3": {
+    "message": "Permite que BrowserIP hable con el asistente y pruébalo:"
+  },
+  "helperTest": {
+    "message": "Probar asistente"
+  },
+  "helperTesting": {
+    "message": "Probando..."
+  },
+  "helperOk": {
+    "message": "El asistente {0} funciona. Mullvad: {1}"
+  },
+  "helperMissing": {
+    "message": "El asistente no está instalado o se instaló para otro ID de extensión."
+  },
+  "helperFailed": {
+    "message": "Mullvad: {0}"
+  },
+  "helperPermissionDenied": {
+    "message": "No se concedió permiso para hablar con el asistente."
+  },
+  "mullvadTitle": {
+    "message": "App de Mullvad"
+  },
+  "mullvadConnect": {
+    "message": "Conectar"
+  },
+  "mullvadDisconnect": {
+    "message": "Desconectar"
+  },
+  "mullvadReconnect": {
+    "message": "Reconectar"
+  },
+  "mullvadChooseCountry": {
+    "message": "Cambiar de país..."
+  },
+  "mullvadSetup": {
+    "message": "Configurar la conexión con un clic"
+  },
+  "mullvadNotSetUp": {
+    "message": "Sin configurar"
+  },
+  "mullvadWorking": {
+    "message": "Esperando a Mullvad..."
+  },
+  "mullvadTimeout": {
+    "message": "Mullvad no terminó a tiempo; revisa la app."
+  },
+  "mullvadStateConnected": {
+    "message": "Conectado · {0}"
+  },
+  "mullvadStateConnectedPlain": {
+    "message": "Conectado"
+  },
+  "mullvadStateConnecting": {
+    "message": "Conectando..."
+  },
+  "mullvadStateDisconnected": {
+    "message": "Desconectado"
+  },
+  "mullvadStateDisconnecting": {
+    "message": "Desconectando..."
+  },
+  "mullvadStateBlocked": {
+    "message": "Bloqueando el tráfico (sin túnel)"
+  },
+  "mullvadStateUnknown": {
+    "message": "Estado desconocido"
+  },
+  "mullvadConnectButton": {
+    "message": "Conectar Mullvad"
   }
 }

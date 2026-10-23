@@ -1,9 +1,17 @@
-import { addressStatus, formatAge, formatAsn, formatCountry, formatLocation, formatTime } from "./lib/format.js";
+import {
+  addressStatus,
+  describeReputation,
+  formatAge,
+  formatAsn,
+  formatCountry,
+  formatLocation,
+  formatTime
+} from "./lib/format.js";
 import { localizePage, t } from "./lib/i18n.js";
 import { deriveIndicator } from "./lib/indicator.js";
 import { isIpAddress } from "./lib/ip.js";
 import { renderLookup } from "./lib/lookup-view.js";
-import { describeProxySettings } from "./lib/proxyinfo.js";
+import { callHelper, describeAppStatus, helperPermitted, waitForAppState } from "./lib/mullvad.js";
 import { buildReport } from "./lib/report.js";
 import { DEFAULT_SETTINGS, applyTheme, loadSettings } from "./lib/settings.js";
 import { runDnsLeakTest } from "./lib/dnsleak.js";
@@ -31,7 +39,11 @@ let currentSettings = { ...DEFAULT_SETTINGS };
 let refreshing = false;
 let flashTimer = null;
 // Latest results, kept for the copied report.
-const extras = { proxy: null, webrtc: null, dns: null };
+const extras = { webrtc: null, dns: null, mullvadApp: null };
+// Mullvad app status from the helper, or null when unavailable.
+let appStatus = null;
+let mullvadBusy = false;
+let mullvadError = null;
 
 function renderFamilies(addresses) {
   // Per-family rows only add information when both families are present.
@@ -89,6 +101,10 @@ function render() {
   fields.asn.textContent = formatAsn(info) ?? placeholder;
   fields.timezone.textContent = info?.timezone ?? placeholder;
   fields.source.textContent = info?.provider ?? placeholder;
+  const reputation = describeReputation(info);
+  $("reputationRow").hidden = !reputation;
+  $("reputation").textContent = reputation?.text ?? "";
+  $("reputation").className = reputation?.flagged ? "tag-bad" : "";
 
   if (!flashTimer) {
     statusEl.textContent = statusText(state, indicator);
@@ -125,25 +141,79 @@ async function refresh(force) {
   }
 }
 
+function renderMullvad() {
+  const panel = $("mullvadPanel");
+  panel.hidden = currentSettings.vpnProvider !== "mullvad";
+  if (panel.hidden) {
+    return;
+  }
+  const connected = ["connected", "connecting"].includes(appStatus?.state);
+  extras.mullvadApp = appStatus ? describeAppStatus(appStatus) : null;
+  $("mullvadState").textContent = mullvadBusy
+    ? t("mullvadWorking")
+    : mullvadError ?? (appStatus ? describeAppStatus(appStatus) : t("mullvadNotSetUp"));
+  $("mullvadControls").hidden = !appStatus;
+  $("mullvadSetup").hidden = Boolean(appStatus);
+  $("mullvadToggle").textContent = connected ? t("mullvadDisconnect") : t("mullvadConnect");
+  for (const control of [$("mullvadToggle"), $("mullvadReconnect"), $("mullvadCountry")]) {
+    control.disabled = mullvadBusy;
+  }
+}
+
+async function loadMullvadCountries() {
+  const select = $("mullvadCountry");
+  select.replaceChildren(new Option(t("mullvadChooseCountry"), ""));
+  try {
+    const { countries } = await callHelper("countries");
+    for (const country of countries) {
+      select.append(new Option(formatCountry({ countryCode: country.code, country: country.name }), country.code));
+    }
+  } catch (_error) {
+    // The list is a convenience; connect/disconnect still work without it.
+  }
+}
+
+async function initMullvad() {
+  renderMullvad();
+  if (currentSettings.vpnProvider !== "mullvad" || !(await helperPermitted())) {
+    return;
+  }
+  try {
+    appStatus = await callHelper("status");
+    mullvadError = null;
+    loadMullvadCountries();
+  } catch (error) {
+    mullvadError = error.message;
+  }
+  renderMullvad();
+}
+
+// Runs a helper command, waits for the app to settle, then re-checks the IP.
+async function mullvadAction(cmd, args, target) {
+  mullvadBusy = true;
+  mullvadError = null;
+  renderMullvad();
+  try {
+    await callHelper(cmd, args);
+    appStatus = await waitForAppState(target);
+    mullvadBusy = false;
+    renderMullvad();
+    await refresh(true);
+  } catch (error) {
+    mullvadError = t("helperFailed", error.message);
+    appStatus = await callHelper("status").catch(() => appStatus);
+  } finally {
+    mullvadBusy = false;
+    renderMullvad();
+  }
+}
+
 async function copyText(text, message) {
   try {
     await navigator.clipboard.writeText(text);
     flashStatus(message);
   } catch (_error) {
     flashStatus(t("copyFailed"));
-  }
-}
-
-async function loadProxy() {
-  try {
-    if (!(await chrome.permissions.contains({ permissions: ["proxy"] }))) {
-      return;
-    }
-    extras.proxy = describeProxySettings(await chrome.proxy.settings.get({}));
-    $("proxy").textContent = extras.proxy;
-    $("proxyRow").hidden = false;
-  } catch (_error) {
-    // Proxy details are optional extras.
   }
 }
 
@@ -232,7 +302,7 @@ async function init() {
   currentSettings = settings;
   applyTheme(settings);
   render();
-  loadProxy();
+  initMullvad();
   // Opening the popup re-checks; unchanged addresses reuse the cached lookup.
   await refresh(false);
 }
@@ -246,6 +316,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
       currentSettings = settings;
       applyTheme(settings);
       render();
+      initMullvad();
     });
   }
 });
@@ -262,6 +333,30 @@ $("copyReport").addEventListener("click", () =>
     buildReport({ state: currentState, settings: currentSettings, now: Date.now(), ...extras }),
     t("copiedReport")
   )
+);
+$("mullvadToggle").addEventListener("click", () => {
+  const connected = ["connected", "connecting"].includes(appStatus?.state);
+  mullvadAction(connected ? "disconnect" : "connect", {}, connected ? ["disconnected"] : ["connected"]);
+});
+$("mullvadReconnect").addEventListener("click", () => mullvadAction("reconnect", {}, ["connected"]));
+$("mullvadCountry").addEventListener("change", (event) => {
+  const country = event.target.value;
+  event.target.value = "";
+  if (!country) {
+    return;
+  }
+  if (["connected", "connecting"].includes(appStatus?.state)) {
+    // The app reconnects by itself; wait for a relay in the new country
+    // (relay names start with the country code, e.g. "se-got-wg-001").
+    mullvadAction("setLocation", { country }, (status) =>
+      status.state === "connected" && (!status.relay || status.relay.startsWith(`${country}-`))
+    );
+  } else {
+    mullvadAction("setLocation", { country }, () => true);
+  }
+});
+$("mullvadSetup").addEventListener("click", () =>
+  chrome.tabs.create({ url: `${chrome.runtime.getURL("options.html")}#mullvad` })
 );
 $("webrtcTest").addEventListener("click", runWebRtcTest);
 $("dnsTest").addEventListener("click", runDnsTest);

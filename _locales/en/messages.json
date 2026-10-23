@@ -59,9 +59,6 @@
   "labelSource": {
     "message": "Source"
   },
-  "labelProxy": {
-    "message": "Browser proxy"
-  },
   "refresh": {
     "message": "Refresh"
   },
@@ -254,27 +251,6 @@
   "dnsFailed": {
     "message": "DNS leak test failed: {0}"
   },
-  "proxyNone": {
-    "message": "None (direct)"
-  },
-  "proxySystem": {
-    "message": "System settings"
-  },
-  "proxyAutoDetect": {
-    "message": "Auto-detect"
-  },
-  "proxyPac": {
-    "message": "PAC script ({0})"
-  },
-  "proxyInlinePac": {
-    "message": "inline"
-  },
-  "proxyFixed": {
-    "message": "Fixed: {0}"
-  },
-  "proxyByExtension": {
-    "message": "(set by another extension)"
-  },
   "reportHeading": {
     "message": "BrowserIP report — {0}"
   },
@@ -334,9 +310,6 @@
   },
   "sectionGuard": {
     "message": "Protected sites"
-  },
-  "sectionProxy": {
-    "message": "Browser proxy"
   },
   "sectionKeys": {
     "message": "API keys"
@@ -452,12 +425,6 @@
   "guardModeBlock": {
     "message": "Blocked with the browser's error page (allow access for an explanation page)"
   },
-  "optProxy": {
-    "message": "Show the browser's proxy settings in the popup"
-  },
-  "optProxyHelp": {
-    "message": "Needs permission to read proxy settings. Explains why the browser's IP can differ from the rest of your system."
-  },
   "keysHelp": {
     "message": "Optional. Keys raise the free daily lookup limits and are stored only on this device."
   },
@@ -487,5 +454,122 @@
   },
   "blockedContinuing": {
     "message": "VPN confirmed. Continuing..."
+  },
+  "labelReputation": {
+    "message": "Reputation"
+  },
+  "reputationClean": {
+    "message": "Not on blocklists"
+  },
+  "reputationAbuser": {
+    "message": "Flagged for abuse; expect CAPTCHAs"
+  },
+  "reputationListed": {
+    "message": "On blocklists ({0}); expect CAPTCHAs"
+  },
+  "reputationListedPlain": {
+    "message": "On blocklists; expect CAPTCHAs"
+  },
+  "mismatchNotMullvad": {
+    "message": "Not connected through Mullvad"
+  },
+  "sectionVpn": {
+    "message": "Your VPN"
+  },
+  "optVpnProvider": {
+    "message": "VPN service"
+  },
+  "optVpnProviderHelp": {
+    "message": "Mullvad: exact detection with Mullvad's own connection check (am.i.mullvad.net), the server name in the popup, and optional one-click connect."
+  },
+  "vpnProviderOther": {
+    "message": "Other / none"
+  },
+  "helperHeading": {
+    "message": "One-click connect (Mullvad app)"
+  },
+  "helperHelp": {
+    "message": "Install the small BrowserIP helper once. It lets the extension run Mullvad's own command-line tool to connect, disconnect, reconnect and switch country, and nothing else."
+  },
+  "helperStep1": {
+    "message": "Download the helper for your system and unpack it:"
+  },
+  "helperReleases": {
+    "message": "latest release"
+  },
+  "helperStep2": {
+    "message": "In the unpacked folder, run (macOS/Linux, then Windows):"
+  },
+  "helperStep3": {
+    "message": "Allow BrowserIP to talk to the helper and test it:"
+  },
+  "helperTest": {
+    "message": "Test helper"
+  },
+  "helperTesting": {
+    "message": "Testing..."
+  },
+  "helperOk": {
+    "message": "Helper {0} works. Mullvad: {1}"
+  },
+  "helperMissing": {
+    "message": "The helper isn't installed, or was installed for a different extension ID."
+  },
+  "helperFailed": {
+    "message": "Mullvad: {0}"
+  },
+  "helperPermissionDenied": {
+    "message": "Permission to talk to the helper was not granted."
+  },
+  "mullvadTitle": {
+    "message": "Mullvad app"
+  },
+  "mullvadConnect": {
+    "message": "Connect"
+  },
+  "mullvadDisconnect": {
+    "message": "Disconnect"
+  },
+  "mullvadReconnect": {
+    "message": "Reconnect"
+  },
+  "mullvadChooseCountry": {
+    "message": "Switch country..."
+  },
+  "mullvadSetup": {
+    "message": "Set up one-click connect"
+  },
+  "mullvadNotSetUp": {
+    "message": "Not set up"
+  },
+  "mullvadWorking": {
+    "message": "Waiting for Mullvad..."
+  },
+  "mullvadTimeout": {
+    "message": "Mullvad didn't finish in time; check the app."
+  },
+  "mullvadStateConnected": {
+    "message": "Connected · {0}"
+  },
+  "mullvadStateConnectedPlain": {
+    "message": "Connected"
+  },
+  "mullvadStateConnecting": {
+    "message": "Connecting..."
+  },
+  "mullvadStateDisconnected": {
+    "message": "Disconnected"
+  },
+  "mullvadStateDisconnecting": {
+    "message": "Disconnecting..."
+  },
+  "mullvadStateBlocked": {
+    "message": "Blocking traffic (no tunnel)"
+  },
+  "mullvadStateUnknown": {
+    "message": "Unknown state"
+  },
+  "mullvadConnectButton": {
+    "message": "Connect Mullvad"
   }
 }

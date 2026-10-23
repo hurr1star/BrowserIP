@@ -59,9 +59,6 @@
   "labelSource": {
     "message": "Quelle"
   },
-  "labelProxy": {
-    "message": "Browser-Proxy"
-  },
   "refresh": {
     "message": "Aktualisieren"
   },
@@ -254,27 +251,6 @@
   "dnsFailed": {
     "message": "DNS-Lecktest fehlgeschlagen: {0}"
   },
-  "proxyNone": {
-    "message": "Keiner (direkt)"
-  },
-  "proxySystem": {
-    "message": "Systemeinstellungen"
-  },
-  "proxyAutoDetect": {
-    "message": "Automatisch erkennen"
-  },
-  "proxyPac": {
-    "message": "PAC-Skript ({0})"
-  },
-  "proxyInlinePac": {
-    "message": "eingebettet"
-  },
-  "proxyFixed": {
-    "message": "Fest: {0}"
-  },
-  "proxyByExtension": {
-    "message": "(von einer anderen Erweiterung gesetzt)"
-  },
   "reportHeading": {
     "message": "BrowserIP-Bericht — {0}"
   },
@@ -334,9 +310,6 @@
   },
   "sectionGuard": {
     "message": "Geschützte Websites"
-  },
-  "sectionProxy": {
-    "message": "Browser-Proxy"
   },
   "sectionKeys": {
     "message": "API-Schlüssel"
@@ -452,12 +425,6 @@
   "guardModeBlock": {
     "message": "Mit der Fehlerseite des Browsers blockiert (Zugriff erlauben für eine Erklärungsseite)"
   },
-  "optProxy": {
-    "message": "Proxy-Einstellungen des Browsers im Popup anzeigen"
-  },
-  "optProxyHelp": {
-    "message": "Benötigt die Berechtigung, Proxy-Einstellungen zu lesen. Erklärt, warum sich die IP des Browsers vom Rest deines Systems unterscheiden kann."
-  },
   "keysHelp": {
     "message": "Optional. Schlüssel erhöhen die kostenlosen täglichen Abfragelimits und werden nur auf diesem Gerät gespeichert."
   },
@@ -487,5 +454,122 @@
   },
   "blockedContinuing": {
     "message": "VPN bestätigt. Seite wird geöffnet..."
+  },
+  "labelReputation": {
+    "message": "Ruf"
+  },
+  "reputationClean": {
+    "message": "Auf keiner Sperrliste"
+  },
+  "reputationAbuser": {
+    "message": "Als missbräuchlich markiert; rechne mit CAPTCHAs"
+  },
+  "reputationListed": {
+    "message": "Auf Sperrlisten ({0}); rechne mit CAPTCHAs"
+  },
+  "reputationListedPlain": {
+    "message": "Auf Sperrlisten; rechne mit CAPTCHAs"
+  },
+  "mismatchNotMullvad": {
+    "message": "Nicht über Mullvad verbunden"
+  },
+  "sectionVpn": {
+    "message": "Dein VPN"
+  },
+  "optVpnProvider": {
+    "message": "VPN-Dienst"
+  },
+  "optVpnProviderHelp": {
+    "message": "Mullvad: exakte Erkennung über Mullvads eigene Verbindungsprüfung (am.i.mullvad.net), Servername im Popup und optional Verbinden mit einem Klick."
+  },
+  "vpnProviderOther": {
+    "message": "Anderer / keiner"
+  },
+  "helperHeading": {
+    "message": "Verbinden mit einem Klick (Mullvad-App)"
+  },
+  "helperHelp": {
+    "message": "Installiere einmalig den kleinen BrowserIP-Helfer. Er lässt die Erweiterung Mullvads eigenes Kommandozeilenwerkzeug ausführen, um zu verbinden, zu trennen, neu zu verbinden und das Land zu wechseln, und sonst nichts."
+  },
+  "helperStep1": {
+    "message": "Lade den Helfer für dein System herunter und entpacke ihn:"
+  },
+  "helperReleases": {
+    "message": "neueste Version"
+  },
+  "helperStep2": {
+    "message": "Führe im entpackten Ordner aus (macOS/Linux, dann Windows):"
+  },
+  "helperStep3": {
+    "message": "Erlaube BrowserIP, mit dem Helfer zu sprechen, und teste ihn:"
+  },
+  "helperTest": {
+    "message": "Helfer testen"
+  },
+  "helperTesting": {
+    "message": "Wird getestet..."
+  },
+  "helperOk": {
+    "message": "Helfer {0} funktioniert. Mullvad: {1}"
+  },
+  "helperMissing": {
+    "message": "Der Helfer ist nicht installiert oder wurde für eine andere Erweiterungs-ID installiert."
+  },
+  "helperFailed": {
+    "message": "Mullvad: {0}"
+  },
+  "helperPermissionDenied": {
+    "message": "Die Berechtigung, mit dem Helfer zu sprechen, wurde nicht erteilt."
+  },
+  "mullvadTitle": {
+    "message": "Mullvad-App"
+  },
+  "mullvadConnect": {
+    "message": "Verbinden"
+  },
+  "mullvadDisconnect": {
+    "message": "Trennen"
+  },
+  "mullvadReconnect": {
+    "message": "Neu verbinden"
+  },
+  "mullvadChooseCountry": {
+    "message": "Land wechseln..."
+  },
+  "mullvadSetup": {
+    "message": "Verbinden mit einem Klick einrichten"
+  },
+  "mullvadNotSetUp": {
+    "message": "Nicht eingerichtet"
+  },
+  "mullvadWorking": {
+    "message": "Warte auf Mullvad..."
+  },
+  "mullvadTimeout": {
+    "message": "Mullvad wurde nicht rechtzeitig fertig; sieh in der App nach."
+  },
+  "mullvadStateConnected": {
+    "message": "Verbunden · {0}"
+  },
+  "mullvadStateConnectedPlain": {
+    "message": "Verbunden"
+  },
+  "mullvadStateConnecting": {
+    "message": "Verbindet..."
+  },
+  "mullvadStateDisconnected": {
+    "message": "Getrennt"
+  },
+  "mullvadStateDisconnecting": {
+    "message": "Trennt..."
+  },
+  "mullvadStateBlocked": {
+    "message": "Blockiert Verkehr (kein Tunnel)"
+  },
+  "mullvadStateUnknown": {
+    "message": "Unbekannter Zustand"
+  },
+  "mullvadConnectButton": {
+    "message": "Mullvad verbinden"
   }
 }

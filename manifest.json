@@ -1,13 +1,15 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "minimum_chrome_version": "121",
   "background": {
     "service_worker": "background.js",
-    "scripts": ["background.js"],
+    "scripts": [
+      "background.js"
+    ],
     "type": "module"
   },
   "action": {
@@ -32,15 +34,28 @@
   },
   "commands": {
     "_execute_action": {
-      "suggested_key": { "default": "Alt+Shift+I" }
+      "suggested_key": {
+        "default": "Alt+Shift+I"
+      }
     },
     "refresh": {
-      "suggested_key": { "default": "Alt+Shift+U" },
+      "suggested_key": {
+        "default": "Alt+Shift+U"
+      },
       "description": "__MSG_commandRefresh__"
     }
   },
-  "permissions": ["alarms", "contextMenus", "declarativeNetRequest", "idle", "notifications", "storage"],
-  "optional_permissions": ["proxy"],
+  "permissions": [
+    "alarms",
+    "contextMenus",
+    "declarativeNetRequest",
+    "idle",
+    "notifications",
+    "storage"
+  ],
+  "optional_permissions": [
+    "nativeMessaging"
+  ],
   "host_permissions": [
     "https://api.ipapi.is/*",
     "https://ipwho.is/*",
@@ -48,13 +63,21 @@
     "https://api4.ipify.org/*",
     "https://api6.ipify.org/*",
     "https://proxycheck.io/*",
-    "https://bash.ws/*"
+    "https://bash.ws/*",
+    "https://ipv4.am.i.mullvad.net/*",
+    "https://ipv6.am.i.mullvad.net/*"
   ],
-  "optional_host_permissions": ["*://*/*"],
+  "optional_host_permissions": [
+    "*://*/*"
+  ],
   "web_accessible_resources": [
     {
-      "resources": ["blocked.html"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "blocked.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "browser_specific_settings": {

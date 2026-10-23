@@ -50,6 +50,67 @@ body {
   text-transform: none;
 }
 
+.mullvad-panel {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 12px;
+  padding: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--surface);
+}
+
+.mullvad-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.mullvad-title {
+  flex-shrink: 0;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.mullvad-state {
+  text-align: right;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.mullvad-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.mullvad-controls button {
+  padding: 6px;
+  font-size: 11px;
+}
+
+.mullvad-controls select {
+  grid-column: 1 / -1;
+}
+
+.mullvad-controls[hidden] {
+  display: none;
+}
+
+.link-button {
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-decoration: underline;
+  text-transform: none;
+}
+
 .ip-label {
   margin: 0 0 4px;
   font-size: 11px;

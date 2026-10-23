@@ -1,6 +1,7 @@
 import { blockedTarget } from "./lib/guard.js";
 import { localizePage, t } from "./lib/i18n.js";
 import { deriveIndicator } from "./lib/indicator.js";
+import { callHelper, helperPermitted, waitForAppState } from "./lib/mullvad.js";
 import { applyTheme, loadSettings } from "./lib/settings.js";
 
 const target = blockedTarget(location.hash);
@@ -37,7 +38,32 @@ async function recheck() {
   }
 }
 
+async function connectMullvad() {
+  const button = document.getElementById("connectMullvad");
+  button.disabled = true;
+  statusEl.textContent = t("mullvadWorking");
+  try {
+    await callHelper("connect");
+    await waitForAppState(["connected"]);
+    await recheck();
+  } catch (error) {
+    statusEl.textContent = t("helperFailed", error.message);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function offerMullvad() {
+  const settings = await loadSettings();
+  if (settings.vpnProvider === "mullvad" && (await helperPermitted())) {
+    const button = document.getElementById("connectMullvad");
+    button.hidden = false;
+    button.addEventListener("click", connectMullvad);
+  }
+}
+
 localizePage();
+offerMullvad();
 document.getElementById("blockedHost").textContent = target?.hostname ?? "";
 recheckButton.addEventListener("click", recheck);
 document.getElementById("openOptions").addEventListener("click", () => chrome.runtime.openOptionsPage());

@@ -4,6 +4,7 @@ import { appendHistory, historyEntry } from "./lib/history.js";
 import { t } from "./lib/i18n.js";
 import { deriveIndicator, describeChange, staleAfterMs } from "./lib/indicator.js";
 import { findIpAddress, isIpAddress } from "./lib/ip.js";
+import { callHelper, helperPermitted, waitForAppState } from "./lib/mullvad.js";
 import { loadApiKeys, loadSettings } from "./lib/settings.js";
 
 const POLL_ALARM = "poll";
@@ -12,6 +13,9 @@ const NOTIFICATION_ID = "browserip-change";
 const LOOKUP_MENU_ID = "lookup-ip";
 
 let inFlight = null;
+// Rule updates read the current rules and then replace them, so two running
+// at once would both add the same IDs. They run one at a time instead.
+let guardQueue = Promise.resolve();
 
 function iconSet(color) {
   return {
@@ -27,7 +31,13 @@ async function readState() {
   return state ?? null;
 }
 
-async function updateGuard(indicator, settings) {
+function updateGuard(indicator, settings) {
+  const run = guardQueue.then(() => replaceGuardRules(indicator, settings));
+  guardQueue = run.catch(() => {});
+  return run;
+}
+
+async function replaceGuardRules(indicator, settings) {
   const active = settings.guardSites.length > 0 && !indicator.safe;
   let addRules = [];
   if (active) {
@@ -76,17 +86,39 @@ async function scheduleStaleAlarm(state, settings) {
   }
 }
 
-async function notify(change, indicator) {
+async function notify(change, indicator, offerConnect) {
+  const options = {
+    type: "basic",
+    iconUrl: chrome.runtime.getURL(`icons/icon-${indicator.color}-128.png`),
+    title: change.title,
+    message: change.message
+  };
   try {
-    await chrome.notifications.create(NOTIFICATION_ID, {
-      type: "basic",
-      iconUrl: chrome.runtime.getURL(`icons/icon-${indicator.color}-128.png`),
-      title: change.title,
-      message: change.message
-    });
+    if (offerConnect) {
+      try {
+        await chrome.notifications.create(NOTIFICATION_ID, {
+          ...options,
+          buttons: [{ title: t("mullvadConnectButton") }]
+        });
+        return;
+      } catch (_error) {
+        // Firefox doesn't support notification buttons.
+      }
+    }
+    await chrome.notifications.create(NOTIFICATION_ID, options);
   } catch (_error) {
     // Notifications can be blocked at the OS level; the icon still updates.
   }
+}
+
+async function connectMullvad() {
+  try {
+    await callHelper("connect");
+    await waitForAppState(["connected"]);
+  } catch (_error) {
+    // The check below shows the outcome either way.
+  }
+  await check({ force: true, notifyChange: false });
 }
 
 async function recordHistory(previous, state, change) {
@@ -100,8 +132,11 @@ async function recordHistory(previous, state, change) {
 function check({ force = false, notifyChange = true } = {}) {
   if (!inFlight) {
     inFlight = (async () => {
-      const [previous, settings, keys] = await Promise.all([readState(), loadSettings(), loadApiKeys()]);
-      const state = await runCheck({ previous, settings, keys, force });
+      const [previous, checkSettings, keys] = await Promise.all([readState(), loadSettings(), loadApiKeys()]);
+      const state = await runCheck({ previous, settings: checkSettings, keys, force });
+      // Settings may have changed while the check ran; apply the current ones
+      // so a stale copy can't undo what the settings listener just applied.
+      const settings = await loadSettings();
       // Update the protected-site rules before publishing the state: the
       // blocked page continues as soon as the stored state turns safe.
       const indicator = await applyState(state, settings);
@@ -110,7 +145,9 @@ function check({ force = false, notifyChange = true } = {}) {
       const change = describeChange(previous, state, settings);
       await recordHistory(previous, state, change);
       if (change && notifyChange && settings.notifyOnChange) {
-        await notify(change, indicator);
+        const offerConnect =
+          settings.vpnProvider === "mullvad" && state.overall !== "tunnelled" && (await helperPermitted());
+        await notify(change, indicator, offerConnect);
       }
       return state;
     })().finally(() => {
@@ -170,6 +207,13 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
 // between redirect and block.
 chrome.permissions.onAdded.addListener(reapply);
 chrome.permissions.onRemoved.addListener(reapply);
+
+chrome.notifications.onButtonClicked?.addListener((id) => {
+  if (id === NOTIFICATION_ID) {
+    chrome.notifications.clear(id);
+    connectMullvad();
+  }
+});
 
 chrome.commands.onCommand.addListener((command) => {
   if (command === "refresh") {
