@@ -1,0 +1,13 @@
+{
+  "ip": "203.0.113.20",
+  "is_datacenter": true,
+  "is_tor": false,
+  "is_proxy": false,
+  "is_vpn": false,
+  "is_mobile": false,
+  "is_abuser": false,
+  "datacenter": { "datacenter": "DigitalOcean" },
+  "company": { "name": "DigitalOcean, LLC" },
+  "asn": { "asn": 14061, "org": "DigitalOcean, LLC" },
+  "location": { "country": "Germany", "country_code": "DE", "state": "Hesse", "city": "Frankfurt am Main", "timezone": "Europe/Berlin" }
+}

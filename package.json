@@ -1,0 +1,22 @@
+{
+  "name": "browserip",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Browser extension that shows your public IP and warns when your VPN is off or leaking.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "node --test",
+    "check": "node scripts/check-manifest.js",
+    "package": "bash scripts/package.sh"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0"
+  }
+}
